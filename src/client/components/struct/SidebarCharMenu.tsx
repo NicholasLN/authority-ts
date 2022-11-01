@@ -52,7 +52,9 @@ export default function SidebarCharMenu() {
                   chars={charState.characters}
                 />
                 {charState.currentCharacter ? (
-                  <div>{charState.currentCharacter.name}</div>
+                  <div className="whitespace-pre-wrap">
+                    {charState.currentCharacter.name}
+                  </div>
                 ) : (
                   <div>No Character</div>
                 )}
