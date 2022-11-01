@@ -5,7 +5,7 @@ A brand new political simulation game.
 Follow the guide in our [Discord](https://discord.gg/TAHJ5NNGQT) server.
 
 ## Contributors
-* Nicholas Luna - Project Lead and Programmer
+* Nick - Project Lead and Programmer
 * Tadeo - Programmer
 
 ## Want to contribute?
