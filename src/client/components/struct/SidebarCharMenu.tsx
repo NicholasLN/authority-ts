@@ -14,7 +14,7 @@ export default function SidebarCharMenu() {
   const charState = useSelector((state: RootState) => state.character);
 
   const [showSelectModal, setShowSelectModal] = React.useState(false);
-  const [showCreateModal, setShowCreateModal] = React.useState(true);
+  const [showCreateModal, setShowCreateModal] = React.useState(false);
 
   const dispatch = useDispatch();
 
@@ -74,7 +74,7 @@ export default function SidebarCharMenu() {
             parseInt(process.env.MAX_CHARACTERS_PER_PERSON!) && (
             <div>
               <CreateCharacterModal
-                shown={true}
+                shown={showCreateModal}
                 onClose={() => setShowCreateModal(false)}
               />
               <button
