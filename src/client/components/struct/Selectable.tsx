@@ -5,7 +5,7 @@ import { changeElement } from "../../redux/reducers/currentElement";
 type Props = {
   selectableType: "Player" | "Party" | "Region" | "Other";
   customCss?: string;
-  children: JSX.Element[];
+  children: JSX.Element | JSX.Element[];
 };
 
 export default function selectable(props: Props) {
