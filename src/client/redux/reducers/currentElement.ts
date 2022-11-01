@@ -1,16 +1,16 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const currentElement = createSlice({
-    name: 'currentPage',
-    initialState: {
-        page: 'home'
+  name: "currentPage",
+  initialState: {
+    page: "home",
+  },
+  reducers: {
+    changeElement: (state, action: PayloadAction<string>) => {
+      state.page = action.payload;
     },
-    reducers: {
-        changeElement: (state, action: PayloadAction<string>) => {
-            state.page = action.payload
-        }
-    }
-})
+  },
+});
 
-export const { changeElement } = currentElement.actions
-export default currentElement.reducer
+export const { changeElement } = currentElement.actions;
+export default currentElement.reducer;
