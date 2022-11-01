@@ -15,7 +15,12 @@ export default function selectable(props: Props) {
     useEffect(() => {
       function handleClickInside(event: { target: any }) {
         if (ref.current && ref.current.contains(event.target)) {
-          dispatch(changeElement({ element: ref.current.id, contentId: ref.current["data-contentid"]}));
+          dispatch(
+            changeElement({
+              element: ref.current.id,
+              contentId: ref.current["data-contentid"],
+            })
+          );
           console.log("You clicked inside!");
         }
       }
@@ -29,7 +34,11 @@ export default function selectable(props: Props) {
   clickedAlert(wrapperRef);
 
   return (
-    <div ref={wrapperRef} id={props.selectableType} data-contentid={props.contentId}>
+    <div
+      ref={wrapperRef}
+      id={props.selectableType}
+      data-contentid={props.contentId}
+    >
       {props.children}
     </div>
   );
