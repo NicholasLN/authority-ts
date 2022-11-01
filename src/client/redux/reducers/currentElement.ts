@@ -5,13 +5,23 @@ export const currentElement = createSlice({
   initialState: {
     element: "Player",
     contentId: 0,
-    characterId: 0
+    characterId: 0,
   },
   reducers: {
-    changeElement: (state, action: PayloadAction<{element: any, contentId: any, characterId: any}>) => {
+    changeElement: (
+      state,
+      action: PayloadAction<{ element: any; contentId: any; characterId: any }>
+    ) => {
       state.element = action.payload.element;
       state.contentId = action.payload.contentId;
       state.characterId = action.payload.characterId;
+
+      console.log(
+        "changeElement",
+        state.element,
+        state.contentId,
+        state.characterId
+      );
     },
   },
 });
