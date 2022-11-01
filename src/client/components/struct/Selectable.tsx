@@ -4,6 +4,7 @@ import { changeElement } from "../../redux/reducers/currentElement";
 
 type Props = {
   selectableType: "Player" | "Party" | "Region" | "Other";
+  contentId?: string;
   customCss?: string;
   children: JSX.Element | JSX.Element[];
 };
@@ -14,7 +15,7 @@ export default function selectable(props: Props) {
     useEffect(() => {
       function handleClickInside(event: { target: any }) {
         if (ref.current && ref.current.contains(event.target)) {
-          dispatch(changeElement(ref.current.id));
+          dispatch(changeElement({ element: ref.current.id, contentId: ref.current["data-contentid"]}));
           console.log("You clicked inside!");
         }
       }
@@ -28,7 +29,7 @@ export default function selectable(props: Props) {
   clickedAlert(wrapperRef);
 
   return (
-    <div ref={wrapperRef} id={props.selectableType}>
+    <div ref={wrapperRef} id={props.selectableType} data-contentid={props.contentId}>
       {props.children}
     </div>
   );

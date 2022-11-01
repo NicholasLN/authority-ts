@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export const currentElement = createSlice({
   name: "currentPage",
   initialState: {
-    page: "home",
+    element: "Player",
+    contentId: 0
   },
   reducers: {
-    changeElement: (state, action: PayloadAction<string>) => {
-      state.page = action.payload;
+    changeElement: (state, action: PayloadAction<{element: any, contentId: any}>) => {
+      state.element = action.payload.element;
+      state.contentId = action.payload.contentId;
     },
   },
 });
