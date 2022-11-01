@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { changeElement } from "../../redux/reducers/currentElement";
 
 type Props = {
-  selectableType: "Player" | "Party" | "Region" | "Other";
+  selectableType: "Character" | "Party" | "Region" | "Other";
   contentId?: string;
   characterId?: string;
   customCss?: string;
@@ -20,7 +20,7 @@ export default function selectable(props: Props) {
             changeElement({
               element: ref.current.id,
               contentId: ref.current.attributes["data-contentid"].value,
-              characterId: ref.current.attributes["data-characterid"],
+              characterId: ref.current.attributes["data-characterid"].value,
             })
           );
           console.log("you clicked inside oh my god");
