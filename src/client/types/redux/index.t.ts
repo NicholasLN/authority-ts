@@ -1,6 +1,12 @@
 interface RootState {
   auth: {
-    user: any;
+    user: {
+      username: string;
+      password: string;
+      email: string;
+      role: string;
+      characters: Array<Character>;
+    };
     loggedIn: boolean;
   };
   windowFocus: {
@@ -9,4 +15,14 @@ interface RootState {
   ui: {
     hideSidebar: boolean;
   };
+  character: {
+    currentCharacter: Character;
+    characters: Array<Character>;
+  };
+}
+
+interface Character {
+  _id: string;
+  name: string;
+  user: string;
 }

@@ -66,7 +66,9 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
       return res.status(422).json({ errors: errors.array() });
     }
     // Check if user exists
-    const user = await User.findOne({ username: req.body.username });
+    const user = await User.findOne({ username: req.body.username }).populate(
+      "characters"
+    );
     if (user) {
       // If user exists, check if the password is correct
       if (user.verifyPassword(req.body.password)) {
@@ -80,7 +82,7 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
         req.body.remember ? (remember = true) : (remember = false);
 
         var jwtToken = generateJWT(jwtObj, remember);
-        // Send the JWT token back to the user as well as the user object
+        // Send the JWT token back to the user as well as the user object;
         return res.status(200).json({
           message: "User logged in",
           token: jwtToken,
@@ -88,6 +90,7 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
             username: user.username,
             email: user.email,
             role: user.role,
+            characters: user.characters,
           },
         });
       }
@@ -100,7 +103,11 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
   }
 }
 async function profile(req: Request, res: Response, next: NextFunction) {
-  var user = await User.findById(req.user.id).select("-password");
+  // find user and populate characters, depopulate password
+  var user = await User.findById(req.user.id)
+    .populate("characters")
+    .select("-password");
+
   if (user) {
     res.status(200).send(user);
   }

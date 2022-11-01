@@ -6,6 +6,7 @@ import path from "path";
 import jwtMiddleware from "./middlewares/verifyJwt";
 import initMongoDBConn from "./mongo/init";
 import userRouter from "./routes/user";
+import characterRouter from "./routes/character";
 import initGlobalMethods from "./utils/globalMethods";
 import { logExpress } from "./utils/logging";
 
@@ -20,6 +21,7 @@ app.use(jwtMiddleware);
 
 // user routes
 app.use("/api/user", userRouter);
+app.use("/api/character", characterRouter);
 
 app.use(express.static(`${process.env.BUILD_OUTPUT}`));
 if (process.env.NODE_ENV!.toUpperCase() == "PRODUCTION") {
