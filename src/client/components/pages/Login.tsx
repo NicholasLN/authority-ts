@@ -25,8 +25,7 @@ export default function Login() {
       remember: false,
     });
     if (res.status == 200) {
-      Cookies.set("access_token", res.data.token);
-      dispatch(login(res.data.user));
+      dispatch(login(res.data));
       navigate("/profile");
     }
   };

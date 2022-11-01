@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { logout } from "../../redux/reducers/authSlice";
 
@@ -10,7 +10,6 @@ export default function Navbar() {
 
   const logoutFunc = function (): any {
     dispatch(logout());
-    Cookies.set("access_token", "null");
   };
 
   return (
@@ -25,19 +24,19 @@ export default function Navbar() {
       <div className="flex flex-grow justify-start items-center px-3 font-signika text-gray-200">
         {!userState.loggedIn ? (
           <>
-            <Link className="px-1" to="/login">
+            <Link className="px-2" to="/login">
               Login
             </Link>
-            <Link className="px-1" to="/register">
+            <Link className="px-2" to="/register">
               Register
             </Link>
           </>
         ) : (
           <>
-            <Link className="px-1" to="/profile">
-              Profile
+            <Link className="px-2" to="/profile">
+              User Home
             </Link>
-            <button className="px-1" onClick={logoutFunc}>
+            <button className="px-2" onClick={logoutFunc}>
               Logout
             </button>
           </>
