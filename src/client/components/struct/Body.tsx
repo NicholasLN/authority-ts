@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
@@ -6,7 +6,7 @@ import Sidebar from "./Sidebar";
 
 type BodyProps = {
   // multiple children
-  children: JSX.Element | JSX.Element[];
+  children: JSX.Element | JSX.Element[] | ReactElement | ReactElement[];
 };
 
 export default function Body(props: BodyProps) {
@@ -20,11 +20,16 @@ export default function Body(props: BodyProps) {
         <Navbar />
       </div>
       {/* Body */}
-      <div className="flex flex-grow w-full h-11/12 bg-background-body">
+      <div className="flex flex-grow w-full h-11/12">
         <Sidebar />
         {/* Content */}
-        <div className="flex flex-col w-full h-full bg-background-body">
-          <div className="m-3">{props.children}</div>
+        <div className="bg-wet-asphalt p-3 w-full">
+          <div className="flex flex-col w-full h-full bg-background-body opacity-95">
+            {/* Center all content from hereon */}
+            <div className="flex flex-col items-center w-full h-full p-2">
+              {props.children}
+            </div>
+          </div>
         </div>
       </div>
       {userState.loggedIn && <Footer />}
