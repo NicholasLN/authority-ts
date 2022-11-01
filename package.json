@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "webpack --mode production",
-    "start": "npm run build && ts-node --files ./src/server/index.ts",
+    "start": "npm run build && ts-node --files ./src/server/index.ts ./src/client",
     "client": "webpack serve --mode development --devtool inline-source-map --hot",
     "server": "nodemon",
     "dev": "concurrently \"npm run server\" \"npm run client\""
