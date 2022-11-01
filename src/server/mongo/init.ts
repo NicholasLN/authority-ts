@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-import { logDB, logError } from '../utils/logging';
-import main from './models';
+import { logDB, logError } from "../utils/logging";
+import main from "./models";
 
 function grabModels() {
   main();
@@ -17,12 +17,16 @@ function initMongoDBConn() {
     );
     process.exit(1);
   }
-  logDB(`Connecting to MongoDB with the following URI: ${process.env.MONGODB_URI_CONNECTION_STRING} ...`, true);
+  logDB(
+    `Connecting to MongoDB with the following URI: ${process.env.MONGODB_URI_CONNECTION_STRING} ...`,
+    true
+  );
   mongoose.connect(
     `${process.env.MONGODB_URI_CONNECTION_STRING}/${process.env.MONGODB_DB_NAME}`,
     {},
     (err) => {
       if (err) {
+        logError(`Error connecting to MongoDB: ${err}`);
         logError("Failed to connect to MongoDB. Bye!");
         process.exit(1);
       }
