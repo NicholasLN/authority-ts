@@ -17,7 +17,7 @@ function initMongoDBConn() {
     );
     process.exit(1);
   }
-  logDB("Connecting to MongoDB...", true);
+  logDB(`Connecting to MongoDB with the following URI: ${process.env.MONGODB_URI_CONNECTION_STRING} ...`, true);
   mongoose.connect(
     `${process.env.MONGODB_URI_CONNECTION_STRING}/${process.env.MONGODB_DB_NAME}`,
     {},

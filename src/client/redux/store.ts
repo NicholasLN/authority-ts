@@ -3,7 +3,7 @@ import authReducer from "./reducers/authSlice";
 import windowFocusReducer from "./reducers/windowFocusSlice";
 import uiReducer from "./reducers/uiSlice";
 import charReducer from "./reducers/characterSlice";
-import currentPageSlice from "./reducers/currentPageSlice";
+import currentElement from "./reducers/currentElement";
 
 export default configureStore({
   reducer: {
@@ -11,6 +11,6 @@ export default configureStore({
     windowFocus: windowFocusReducer,
     ui: uiReducer,
     character: charReducer,
-    page: currentPageSlice,
+    element: currentElement,
   },
 });
