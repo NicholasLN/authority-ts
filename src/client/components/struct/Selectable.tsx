@@ -15,8 +15,8 @@ export default function selectable(props: Props) {
     useEffect(() => {
       function handleClickInside(event: { target: any }) {
         if (ref.current && ref.current.contains(event.target)) {
-          dispatch(changeElement({ element: ref.current.id, contentId: ref.current["data-contentid"]}));
-          console.log("You clicked inside!");
+          dispatch(changeElement({ element: ref.current.id, contentId: ref.current.attributes["data-contentid"]}));
+          console.log('you clicked inside oh my god');
         }
       }
       document.addEventListener("mousedown", handleClickInside);
