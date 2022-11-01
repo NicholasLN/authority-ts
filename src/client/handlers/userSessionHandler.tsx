@@ -1,8 +1,8 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { login, logout, updateState } from "../redux/reducers/authSlice";
 import getPage from "../utils/getPage";
+import { useDispatch, useSelector } from "react-redux";
+import { login, logout, updateState } from "../redux/reducers/authSlice";
 import { BeatLoader } from "react-spinners";
 import { updateCharacters } from "../redux/reducers/characterSlice";
 
@@ -14,12 +14,11 @@ function userSessionHandler(props: UserSessionHandlerProps) {
   const [loading, setLoading] = React.useState(true);
   const userState = useSelector((state: RootState) => state.auth);
   const isFocused = useSelector((state: RootState) => state.windowFocus.focus);
-  const characterState = useSelector((state: RootState) => state.character);
   const dispatch = useDispatch();
 
   React.useEffect(() => {
     async function updateSession(): Promise<any> {
-      var access_token = Cookies.get("access_token");
+      var access_token: string | undefined = Cookies.get("access_token");
       if (!access_token) {
         // No access token, so we're not logged in
         return Cookies.set("access_token", "null");
