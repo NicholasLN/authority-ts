@@ -23,7 +23,7 @@ export default function Navbar() {
       {/* Brand with text: AUTHORITY */}
       <div className="flex items-center px-3">
         <h1 className="text-2xl font-bold text-background-body font-signika">
-          AUTHORITY
+          <Link to="/">AUTHORITY</Link>
         </h1>
       </div>
       {/* Login/Register/Profile */}
