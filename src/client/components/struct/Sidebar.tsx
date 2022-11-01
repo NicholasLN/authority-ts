@@ -4,7 +4,7 @@ import { toggleSidebar } from "../../redux/reducers/uiSlice";
 import SidebarContextActions from "./SidebarContextActions";
 
 type SidebarProps = {
-  sidebarType?: 'Default' | 'else'
+  sidebarType?: "Default" | "else";
 };
 
 export default function Sidebar(props: SidebarProps) {
@@ -29,7 +29,8 @@ export default function Sidebar(props: SidebarProps) {
         {!uiState.hideSidebar && (
           <div className="flex flex-col h-full bg-wet-asphalt">
             <h1 className="flex flex-grow justify-center w-full h-12 text-lg text-background-body">
-              <SidebarContextActions /> {/* we need a provider for the context info here */}
+              <SidebarContextActions />{" "}
+              {/* we need a provider for the context info here */}
             </h1>
           </div>
         )}

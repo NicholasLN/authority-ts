@@ -1,20 +1,18 @@
-import React from "react"
+import React from "react";
 
 type Props = {
-    type?: string
-    additionalInfo?: {}
-}
+  type?: string;
+  additionalInfo?: {};
+};
 
 export default function contextActions(props: Props) {
-    if (props.type === 'Default' || props.type === undefined) {
-        return(
-            <ul>
-                <li>
-                    No actions here.
-                </li>
-            </ul>
-        )
-    }
+  if (props.type === "Default" || props.type === undefined) {
+    return (
+      <ul>
+        <li>No actions here.</li>
+      </ul>
+    );
+  }
 
-    return (<></>)
+  return <></>;
 }
