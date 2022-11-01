@@ -4,6 +4,7 @@ import { changeElement } from "../../redux/reducers/currentElement";
 
 type Props = {
   selectableType: "Player" | "Party" | "Region" | "Other";
+  contentId?: string;
   customCss?: string;
   children: JSX.Element[];
 };
@@ -28,7 +29,7 @@ export default function selectable(props: Props) {
   clickedAlert(wrapperRef);
 
   return (
-    <div ref={wrapperRef} id={props.selectableType}>
+    <div ref={wrapperRef} id={props.selectableType} data-contentid={props.contentId}>
       {props.children}
     </div>
   );
