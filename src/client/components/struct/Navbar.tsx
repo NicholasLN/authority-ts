@@ -3,6 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { logout } from "../../redux/reducers/authSlice";
+import {
+  characterLogout,
+  switchCharacter,
+} from "../../redux/reducers/characterSlice";
 
 export default function Navbar() {
   const userState = useSelector((state: RootState) => state.auth);
@@ -10,6 +14,8 @@ export default function Navbar() {
 
   const logoutFunc = function (): any {
     dispatch(logout());
+    // Make sure to reset the character state
+    dispatch(characterLogout());
   };
 
   return (
