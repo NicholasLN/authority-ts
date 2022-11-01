@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { changeElement } from "../../redux/reducers/currentElement";
 
@@ -12,10 +12,14 @@ type Props = {
 
 export default function selectable(props: Props) {
   var dispatch = useDispatch();
+  const [focused, setFocused] = useState(false)
   function clickedAlert(ref: any) {
     useEffect(() => {
       function handleClickInside(event: { target: any }) {
+        setFocused(false)
         if (ref.current && ref.current.contains(event.target)) {
+          setFocused(true)
+
           dispatch(
             changeElement({
               element: ref.current.id,
@@ -41,6 +45,7 @@ export default function selectable(props: Props) {
       id={props.selectableType}
       data-contentid={props.contentId}
       data-characterid={props.characterId}
+      className={focused ? 'outline outline-indigo-500 outline-offset-1 outline-2' : ''}
     >
       {props.children}
     </div>

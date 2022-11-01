@@ -67,6 +67,24 @@ async function createCharacter(
   }
 }
 
+async function getCharacter(req: Request, res: Response, next: NextFunction) {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    
+    const character = await Character.findById(req.params.id)
+
+    if (character) {
+      return res.status(200).json({...character.toJSON()})
+    }
+  } catch (e) {
+    next(e)
+  }
+}
+
 export default {
   createCharacter,
+  getCharacter,
 };

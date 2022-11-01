@@ -19,6 +19,11 @@ interface RootState {
     currentCharacter: Character;
     characters: Array<Character>;
   };
+  element: {
+    element: string;
+    contentId: string;
+    characterId: string;
+  }
 }
 
 interface Character {
