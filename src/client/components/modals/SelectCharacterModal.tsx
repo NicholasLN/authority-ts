@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { switchCharacter } from "../../redux/reducers/characterSlice";
 import Modal from "../struct/Modal";
@@ -20,6 +20,9 @@ export default function SelectCharacterModal(props: SelectCharacterModalProps) {
   const switchCharButton = function (char: Character) {
     dispatch(switchCharacter(char));
   };
+
+  useEffect(() => {}, [charState]);
+
   return (
     <Modal
       modalTitle="Select Character"
