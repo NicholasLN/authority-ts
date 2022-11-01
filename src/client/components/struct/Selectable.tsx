@@ -19,7 +19,7 @@ export default function selectable(props: Props) {
           dispatch(
             changeElement({
               element: ref.current.id,
-              contentId: ref.current.attributes["data-contentid"],
+              contentId: ref.current.attributes["data-contentid"].value,
               characterId: ref.current.attributes["data-characterid"],
             })
           );
