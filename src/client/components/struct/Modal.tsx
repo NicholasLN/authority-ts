@@ -4,6 +4,8 @@ type ModalProps = {
   modalTitle: string | JSX.Element;
   children: JSX.Element | JSX.Element[] | null | undefined;
   closable: boolean | undefined;
+  shown: boolean;
+  onClose: () => void;
 };
 
 export default function Modal(props: ModalProps) {
@@ -11,7 +13,11 @@ export default function Modal(props: ModalProps) {
   // It should be able to be closed with an X, clicking outside, or hitting the ESC button if closable is true
   // It should be absolutely positioned in the center of the screen with a blurred background
   return (
-    <div className="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 h-full backdrop-brightness-50">
+    <div
+      className={`${
+        !props.shown && "hidden"
+      } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 h-full backdrop-brightness-50`}
+    >
       <div className="flex flex-col items-center justify-center h-full">
         <div className="flex flex-col h-1/2 w-1/2 bg-background-body rounded-md">
           <div className="flex flex-row justify-between w-full h-12 bg-green-sea">
@@ -19,7 +25,10 @@ export default function Modal(props: ModalProps) {
               {props.modalTitle}
             </h1>
             {props.closable && (
-              <button className="flex items-center justify-center w-12 h-12">
+              <button
+                onClick={props.onClose}
+                className="flex items-center justify-center w-12 h-12"
+              >
                 <svg
                   className="w-6 h-6 text-background-body"
                   fill="none"
@@ -37,7 +46,7 @@ export default function Modal(props: ModalProps) {
               </button>
             )}
           </div>
-          <div className="flex flex-col flex-grow w-full h-full p-3 bg-gray">
+          <div className="flex flex-col flex-grow w-full h-full text-center text-black text-lg">
             {props.children}
           </div>
         </div>
