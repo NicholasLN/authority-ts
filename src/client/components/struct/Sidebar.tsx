@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { toggleSidebar } from "../../redux/reducers/uiSlice";
+import SidebarCharMenu from "./SidebarCharMenu";
 import SidebarContextActions from "./SidebarContextActions";
 
 type SidebarProps = {
@@ -9,14 +10,15 @@ type SidebarProps = {
 
 export default function Sidebar(props: SidebarProps) {
   const uiState = useSelector((state: RootState) => state.ui);
+  const authState = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   return (
     <>
       {/* Make a sidebar with w-24 that reduces to w-12
         when uiState.sidebar is false. Toggling the button should trigger an animation to expand it again to w-24 */}
       <div
-        className={`flex flex-col h-full bg-wet-asphalt transition-all duration-100 ${
-          uiState.hideSidebar ? "w-8" : "w-36"
+        className={`flex flex-col h-full bg-wet-asphalt transition-all duration-100 whitespace-nowrap ${
+          uiState.hideSidebar ? "w-8" : "w-36 md:w-36 sm:w-24"
         }`}
       >
         <button
@@ -32,6 +34,7 @@ export default function Sidebar(props: SidebarProps) {
               <SidebarContextActions />{" "}
               {/* we need a provider for the context info here */}
             </h1>
+            {authState.loggedIn && <SidebarCharMenu />}
           </div>
         )}
       </div>
