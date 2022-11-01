@@ -6,6 +6,7 @@ import Selectable from "../struct/Selectable";
 
 export default function Profile() {
   const userState = useSelector((state: RootState) => state.auth);
+  const charState = useSelector((state: RootState) => state.character);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,10 +17,23 @@ export default function Profile() {
 
   return (
     <Body>
-      <Selectable selectableType="Player" contentId="1">
-        <p>username: {userState.user.username}</p>
-        <p>email: {userState.user.email}</p>
-      </Selectable>
+      <p className="text-3xl">Welcome {userState.user.username}</p>
+      <p className="text-xl">Characters</p>
+      <div className="flex flex-row flex-wrap">
+        {charState.characters.map((char) => {
+          return (
+            <div className="flex flex-col mx-3" key={char._id}>
+              <Selectable
+                selectableType="Character"
+                contentId={char._id}
+                characterId={char._id}
+              >
+                <p>{char.name}</p>
+              </Selectable>
+            </div>
+          );
+        })}
+      </div>
     </Body>
   );
 }
