@@ -26,12 +26,12 @@ export default function Body(props: BodyProps) {
         {/* Content */}
         <div className="flex flex-col w-full h-full bg-background-body">
           <div className="m-3">{props.children}</div>
-          <Modal modalTitle="Test Modal" closable={true}>
+          {/* <Modal modalTitle="Test Modal" closable={true}>
             <h1>
               This is a test modal. It should be closable by clicking the X in
               the
             </h1>
-          </Modal>
+          </Modal> */}
         </div>
       </div>
       {userState.loggedIn && <Footer />}
