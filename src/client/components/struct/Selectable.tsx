@@ -5,6 +5,7 @@ import { changeElement } from "../../redux/reducers/currentElement";
 type Props = {
   selectableType: "Player" | "Party" | "Region" | "Other";
   contentId?: string;
+  characterId?: string;
   customCss?: string;
   children: JSX.Element | JSX.Element[];
 };
@@ -18,10 +19,11 @@ export default function selectable(props: Props) {
           dispatch(
             changeElement({
               element: ref.current.id,
-              contentId: ref.current["data-contentid"],
+              contentId: ref.current.attributes["data-contentid"],
+              characterId: ref.current.attributes["data-characterid"],
             })
           );
-          console.log("You clicked inside!");
+          console.log("you clicked inside oh my god");
         }
       }
       document.addEventListener("mousedown", handleClickInside);
@@ -38,6 +40,7 @@ export default function selectable(props: Props) {
       ref={wrapperRef}
       id={props.selectableType}
       data-contentid={props.contentId}
+      data-characterid={props.characterId}
     >
       {props.children}
     </div>
