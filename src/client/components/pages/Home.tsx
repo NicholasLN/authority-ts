@@ -8,19 +8,34 @@ export default function Home() {
   const userState = useSelector((user: RootState) => user.auth);
   return (
     <Body>
-      <h1 className="text-lg align-middle underline">Home</h1>
-      <br />
-      <div className="text-blue-500">
-        {!userState.loggedIn ? (
-          <>
-            <Link to="/login">Login Page</Link>
-            <br />
-            <Link to="/register">Register Page</Link>
-          </>
-        ) : (
-          <Link to="/profile">Profile</Link>
-        )}
-      </div>
+      <h1 className="text-3xl font-extrabold">AUTHORITY</h1>
+      <p className="text-xl">
+        I shat my pants and I'm not going to change it. I fucking hate this
+        website. You can't even see the fucking code. I am so fucking mad. I am
+        so fucking mad. I am so fucking mad.
+      </p>
+      {!userState.loggedIn ? (
+        <>
+          <Link to="/login">
+            <button className="text-white bg-blue-500 rounded-md p-2 px-3">
+              Login
+            </button>
+          </Link>
+          <Link to="/register">
+            <button className="text-white bg-blue-500 rounded-md p-2 px-3 m-3">
+              Register
+            </button>
+          </Link>
+        </>
+      ) : (
+        <>
+          <Link to="/profile">
+            <button className="text-white bg-blue-500 rounded-md p-2 px-3">
+              Profile
+            </button>
+          </Link>
+        </>
+      )}
     </Body>
   );
 }
