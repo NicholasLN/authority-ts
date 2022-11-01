@@ -85,6 +85,9 @@ let config = {
       "process.env": {
         ENVIRONMENT: JSON.stringify(process.env.NODE_ENV),
         SECURE: JSON.stringify(process.env.SECURE),
+        MAX_CHARACTERS_PER_PERSON: JSON.stringify(
+          process.env.MAX_CHARACTERS_PER_PERSON
+        ),
       },
     }),
     new MiniCssExtractPlugin({

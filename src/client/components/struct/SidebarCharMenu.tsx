@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { switchCharacter } from "../../redux/reducers/characterSlice";
+import CreateCharacterModal from "../modals/CreateCharacterModal";
 import SelectCharacterModal from "../modals/SelectCharacterModal";
 import Modal from "./Modal";
 
@@ -13,7 +14,7 @@ export default function SidebarCharMenu() {
   const charState = useSelector((state: RootState) => state.character);
 
   const [showSelectModal, setShowSelectModal] = React.useState(false);
-  const [showCreateModal, setShowCreateModal] = React.useState(false);
+  const [showCreateModal, setShowCreateModal] = React.useState(true);
 
   const dispatch = useDispatch();
 
@@ -69,6 +70,23 @@ export default function SidebarCharMenu() {
               </div>
             )
           }
+          {charState.characters.length <
+            parseInt(process.env.MAX_CHARACTERS_PER_PERSON!) && (
+            <div>
+              <CreateCharacterModal
+                shown={true}
+                onClose={() => setShowCreateModal(false)}
+              />
+              <button
+                onClick={
+                  // When the button is clicked, show the create character modal
+                  () => setShowCreateModal(true)
+                }
+              >
+                Create Character
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
