@@ -5,6 +5,7 @@ import postPage from "../../utils/postPage";
 import { login } from "../../redux/reducers/authSlice";
 import Body from "../struct/Body";
 import Cookies from "js-cookie";
+import { updateCharacters } from "../../redux/reducers/characterSlice";
 
 export default function Login() {
   const userState = useSelector((state: RootState) => state.auth);
@@ -26,6 +27,7 @@ export default function Login() {
     });
     if (res.status == 200) {
       dispatch(login(res.data));
+      dispatch(updateCharacters(res.data.user.characters));
       navigate("/profile");
     }
   };
