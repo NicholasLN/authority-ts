@@ -29,10 +29,25 @@ export const charSlice = createSlice({
     },
     switchCharacter: (state, action) => {
       Cookies.set("current_character", action.payload._id);
-      state.currentCharacter = action.payload;
+      // Find the character in the list of characters and set it as the current character.
+      var char = state.characters.find(
+        (char: Character) => char._id === action.payload._id
+      );
+      console.log();
+      if (char) {
+        state.currentCharacter = char;
+      } else {
+        state.currentCharacter = false;
+      }
+    },
+    characterLogout: (state) => {
+      Cookies.set("current_character", "none");
+      state.characters = [];
+      state.currentCharacter = false;
     },
   },
 });
 
-export const { updateCharacters, switchCharacter } = charSlice.actions;
+export const { updateCharacters, switchCharacter, characterLogout } =
+  charSlice.actions;
 export default charSlice.reducer;
