@@ -15,7 +15,7 @@ export default function selectable(props: Props) {
     useEffect(() => {
       function handleClickInside(event: { target: any }) {
         if (ref.current && ref.current.contains(event.target)) {
-          dispatch(changeElement(ref.current.id));
+          dispatch(changeElement({ element: ref.current.id, contentId: ref.current["data-contentid"]}));
           console.log("You clicked inside!");
         }
       }

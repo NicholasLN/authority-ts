@@ -16,7 +16,7 @@ export default function Profile() {
 
   return (
     <Body>
-      <Selectable selectableType="Player">
+      <Selectable selectableType="Player" contentId="1">
         <p>username: {userState.user.username}</p>
         <p>email: {userState.user.email}</p>
       </Selectable>
