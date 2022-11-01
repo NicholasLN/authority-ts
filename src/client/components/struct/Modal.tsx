@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 type ModalProps = {
   modalTitle: string | JSX.Element;
@@ -12,6 +12,18 @@ export default function Modal(props: ModalProps) {
   // Create a modal that has a title and content that can be passed in as props.children
   // It should be able to be closed with an X, clicking outside, or hitting the ESC button if closable is true
   // It should be absolutely positioned in the center of the screen with a blurred background
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && props.closable) {
+        props.onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [props.closable, props.onClose]);
+
   return (
     <div
       className={`${
@@ -19,7 +31,7 @@ export default function Modal(props: ModalProps) {
       } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 h-full backdrop-brightness-50`}
     >
       <div className="flex flex-col items-center justify-center h-full">
-        <div className="flex flex-col h-1/2 w-1/2 bg-background-body rounded-md">
+        <div className="flex flex-col h-1/2 w-1/2 sm:w-8/12 xs:w-10/12 bg-background-body rounded-md">
           <div className="flex flex-row justify-between w-full h-12 bg-green-sea">
             <h1 className="flex flex-grow items-center justify-center text-background-body">
               {props.modalTitle}
