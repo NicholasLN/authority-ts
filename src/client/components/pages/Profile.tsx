@@ -18,7 +18,7 @@ export default function Profile() {
   return (
     <Body>
       <p className="text-3xl">Welcome {userState.user.username}</p>
-      <p className="text-xl">Characters</p>
+      <p className="text-xl font-semibold">Characters</p>
       <div className="flex flex-row flex-wrap">
         {charState.characters.map((char) => {
           return (
@@ -34,6 +34,18 @@ export default function Profile() {
           );
         })}
       </div>
+      <br />
+      {charState.currentCharacter ? (
+        <div className="text-center">
+          <p className="text-xl font-semibold">Current Character</p>
+          <p>{charState.currentCharacter.name}</p>
+        </div>
+      ) : (
+        <div className="text-center">
+          <p className="text-xl font-semibold">Current Character</p>
+          <p>No character selected</p>
+        </div>
+      )}
     </Body>
   );
 }
