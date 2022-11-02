@@ -50,7 +50,8 @@ export default function CharacterContextActions() {
       {!authState.loggedIn ? (
         <div>Open Profile</div>
       ) : // User is logged in (User View if not current character)
-      characterInfo._id !== characterState.currentCharacter._id ? (
+      characterInfo._id !== characterState.currentCharacter._id &&
+        characterState.currentCharacter ? (
         <ul>
           <li>
             <b>{characterInfo.name}</b>
