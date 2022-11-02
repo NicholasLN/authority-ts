@@ -23,11 +23,7 @@ export default function Profile() {
         {charState.characters.map((char) => {
           return (
             <div className="flex flex-col mx-3" key={char._id}>
-              <Selectable
-                selectableType="Character"
-                contentId={char._id}
-                characterId={char._id}
-              >
+              <Selectable contextType="Character" contextId={char._id}>
                 <p>{char.name}</p>
               </Selectable>
             </div>

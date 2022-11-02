@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { toggleSidebar } from "../../redux/reducers/uiSlice";
 import SidebarCharMenu from "./SidebarCharMenu";
-import SidebarContextActions from "./SidebarContextActions";
+import SidebarContextActions from "../contextMenu/SidebarContextActions";
 
 type SidebarProps = {
   sidebarType?: "Default" | "else";
@@ -11,7 +11,6 @@ type SidebarProps = {
 export default function Sidebar(props: SidebarProps) {
   const uiState = useSelector((state: RootState) => state.ui);
   const authState = useSelector((state: RootState) => state.auth);
-  const elementState = useSelector((state: RootState) => state.element);
   const dispatch = useDispatch();
   return (
     <>
@@ -32,7 +31,7 @@ export default function Sidebar(props: SidebarProps) {
         {!uiState.hideSidebar && (
           <div className="flex flex-col h-full bg-wet-asphalt">
             <h1 className="flex flex-grow justify-center w-full h-12 sm:text-sm xs:text-sm text-background-body">
-              <SidebarContextActions type={elementState.element} additionalInfo={elementState} />{" "}
+              <SidebarContextActions />
               {/* we need a provider for the context info here */}
             </h1>
             {authState.loggedIn && <SidebarCharMenu />}

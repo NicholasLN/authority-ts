@@ -62,9 +62,9 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
                   onChange={(e) => setForm({ ...form, gender: e.target.value })}
                 >
                   {["man", "woman", "trans", "nonbinary", "other"].map(
-                    (option) => {
+                    (option, idx) => {
                       return (
-                        <option value={option}>
+                        <option value={option} key={idx}>
                           {option.charAt(0).toUpperCase() + option.slice(1)}
                         </option>
                       );
@@ -85,9 +85,9 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
                     setForm({ ...form, location: e.target.value })
                   }
                 >
-                  {["fictionland"].map((option) => {
+                  {["fictionland"].map((option, idx) => {
                     return (
-                      <option value={option}>
+                      <option key={idx} value={option}>
                         {option.charAt(0).toUpperCase() + option.slice(1)}
                       </option>
                     );
@@ -98,9 +98,9 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
           </div>
           {/* Flex row with 5 columns of equal width. This will be used for allocating 20 points. */}
           <div className="flex flex-row w-full mt-2">
-            {Object.keys(skills).map((skill) => {
+            {Object.keys(skills).map((skill, idx) => {
               return (
-                <div className="w-1/5 px-3" key={skill}>
+                <div className="w-1/5 px-3" key={idx}>
                   <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                     {skill.charAt(0).toUpperCase() + skill.slice(1)}
                   </label>

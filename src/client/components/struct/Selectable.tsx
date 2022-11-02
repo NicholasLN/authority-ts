@@ -1,30 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { changeElement } from "../../redux/reducers/currentElement";
+import { changeElement } from "../../redux/reducers/contextSlice";
 
 type Props = {
-  selectableType: "Character" | "Party" | "Region" | "Other";
-  contentId?: string;
-  characterId?: string;
-  customCss?: string;
+  contextType: "Character" | "Party" | "Region" | "Other";
+  contextId?: string;
   children: JSX.Element | JSX.Element[];
 };
 
 export default function selectable(props: Props) {
   var dispatch = useDispatch();
-  const [focused, setFocused] = useState(false)
+  const [focused, setFocused] = useState(false);
   function clickedAlert(ref: any) {
     useEffect(() => {
       function handleClickInside(event: { target: any }) {
-        setFocused(false)
+        setFocused(false);
         if (ref.current && ref.current.contains(event.target)) {
-          setFocused(true)
+          setFocused(true);
 
           dispatch(
             changeElement({
-              element: ref.current.id,
-              contentId: ref.current.attributes["data-contentid"].value,
-              characterId: ref.current.attributes["data-characterid"].value,
+              contextType: ref.current.id,
+              contextId: ref.current.attributes["data-contextid"].value,
             })
           );
           console.log("you clicked inside oh my god");
@@ -42,10 +39,11 @@ export default function selectable(props: Props) {
   return (
     <div
       ref={wrapperRef}
-      id={props.selectableType}
-      data-contentid={props.contentId}
-      data-characterid={props.characterId}
-      className={focused ? 'outline outline-indigo-500 outline-offset-1 outline-2' : ''}
+      id={props.contextType}
+      data-contextid={props.contextId}
+      className={
+        focused ? "outline outline-indigo-500 outline-offset-1 outline-2" : ""
+      }
     >
       {props.children}
     </div>
