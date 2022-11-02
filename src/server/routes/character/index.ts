@@ -1,5 +1,5 @@
 import express from "express";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import characterController from "../../controllers/characterController";
 import { isLoggedIn, notLoggedIn } from "../../stategies/authStrategies";
 
@@ -11,5 +11,11 @@ router.post(
   body("name", "Name is required").exists(),
   characterController.createCharacter
 );
+
+router.get(
+  '/read/:id',
+  param('id', 'ID is required').exists(),
+  characterController.getCharacter
+)
 
 export default router;

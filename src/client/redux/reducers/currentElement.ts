@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const currentElement = createSlice({
-  name: "currentPage",
+  name: "currentElement",
   initialState: {
     element: "Player",
     contentId: 0,
