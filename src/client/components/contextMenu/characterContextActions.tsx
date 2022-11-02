@@ -7,6 +7,9 @@ import SendCampaignFundsModal from "../modals/SendCampFundsModal";
 export default function CharacterContextActions() {
   // TODO: If the current character of the current user is selected, don't do anything.
   const currentContext = useSelector((state: RootState) => state.contextMenu);
+  const characterState = useSelector((state: RootState) => state.character);
+  const authState = useSelector((state: RootState) => state.auth);
+
   const [showModal, setShowModal] = useState(false)
   const [characterInfo, setCharacterInfo] = React.useState<Character>(
     {} as Character
@@ -31,7 +34,7 @@ export default function CharacterContextActions() {
     }
     fetchCharacter();
     setLoading(false);
-  }, [currentContext.contextId]);
+  }, [currentContext.contextId, authState.loggedIn, characterState.currentCharacter]);
 
   // TODO: Get character info from the database using contextId and populate the context options, (send money, mail, etc.)
   if (loading) {
@@ -43,7 +46,7 @@ export default function CharacterContextActions() {
     <li><b>{characterInfo.name}</b></li>
     <br />
     <li>
-      <button className="text-blue-400" onClick={() => setShowModal(true)}>
+      <button className="text-blue-400 font-bold" onClick={() => setShowModal(true)}>
       Send Funds
       </button>
 
