@@ -5,11 +5,10 @@ import getPage from "../../utils/getPage";
 import SendCampaignFundsModal from "../modals/SendCampFundsModal";
 
 export default function CharacterContextActions() {
-  // TODO: If the current character of the current user is selected, don't do anything.
   const currentContext = useSelector((state: RootState) => state.contextMenu);
   const characterState = useSelector((state: RootState) => state.character);
   const authState = useSelector((state: RootState) => state.auth);
-
+  
   const [showModal, setShowModal] = useState(false)
   const [characterInfo, setCharacterInfo] = React.useState<Character>(
     {} as Character
@@ -34,7 +33,11 @@ export default function CharacterContextActions() {
     }
     fetchCharacter();
     setLoading(false);
-  }, [currentContext.contextId, authState.loggedIn, characterState.currentCharacter]);
+  }, [
+    currentContext.contextId,
+    authState.loggedIn,
+    characterState.currentCharacter,
+  ]);
 
   // TODO: Get character info from the database using contextId and populate the context options, (send money, mail, etc.)
   if (loading) {
@@ -42,6 +45,12 @@ export default function CharacterContextActions() {
   }
   // TODO: Tay, you can use this to make the context menu for characters. At this point you have the character info in the characterInfo variable.
   return (
+  <>
+      {/* No user is logged in (Guest View) */}
+      {!authState.loggedIn ? (
+        <div>Open Profile</div>
+      ) : // User is logged in (User View if not current character)
+      characterInfo._id !== characterState.currentCharacter._id ? (
     <ul>
     <li><b>{characterInfo.name}</b></li>
     <br />
@@ -60,5 +69,10 @@ export default function CharacterContextActions() {
       }}/>
     </li>
   </ul>
-  )
+      ) : (
+        // User is logged in (User View if current character)
+        <div>Open Profile</div>
+      )}
+    </>
+  );
 }
