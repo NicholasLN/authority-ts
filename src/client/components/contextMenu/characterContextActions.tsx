@@ -9,7 +9,7 @@ export default function CharacterContextActions() {
   const characterState = useSelector((state: RootState) => state.character);
   const authState = useSelector((state: RootState) => state.auth);
 
-  const [showModal, setShowModal] = useState(false);
+  const [showSendCFModal, setShowSendCFModal] = useState(false);
   const [characterInfo, setCharacterInfo] = React.useState<Character>(
     {} as Character
   );
@@ -60,14 +60,14 @@ export default function CharacterContextActions() {
           <li>
             <button
               className="text-blue-400 font-bold"
-              onClick={() => setShowModal(true)}
+              onClick={() => setShowSendCFModal(true)}
             >
               Send Funds
             </button>
 
             <SendCampaignFundsModal
-              onClose={() => setShowModal(false)}
-              shown={showModal}
+              onClose={() => setShowSendCFModal(false)}
+              shown={showSendCFModal}
               character={{
                 id: characterInfo._id,
                 name: characterInfo.name,
