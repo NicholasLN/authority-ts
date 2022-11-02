@@ -5,6 +5,7 @@ import getPage from "../../utils/getPage";
 import SendCampaignFundsModal from "../modals/SendCampFundsModal";
 
 export default function CharacterContextActions() {
+  // TODO: If the current character of the current user is selected, don't do anything.
   const currentContext = useSelector((state: RootState) => state.contextMenu);
   const [showModal, setShowModal] = useState(false)
   const [characterInfo, setCharacterInfo] = React.useState<Character>(
