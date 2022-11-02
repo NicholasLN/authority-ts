@@ -4,6 +4,7 @@ import { invalidateElement } from "../../redux/reducers/contextSlice";
 import getPage from "../../utils/getPage";
 
 export default function CharacterContextActions() {
+  // TODO: If the current character of the current user is selected, don't do anything.
   const currentContext = useSelector((state: RootState) => state.contextMenu);
   const [characterInfo, setCharacterInfo] = React.useState<Character>(
     {} as Character
