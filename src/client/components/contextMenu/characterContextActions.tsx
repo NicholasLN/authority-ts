@@ -4,8 +4,10 @@ import { invalidateElement } from "../../redux/reducers/contextSlice";
 import getPage from "../../utils/getPage";
 
 export default function CharacterContextActions() {
-  // TODO: If the current character of the current user is selected, don't do anything.
   const currentContext = useSelector((state: RootState) => state.contextMenu);
+  const characterState = useSelector((state: RootState) => state.character);
+  const authState = useSelector((state: RootState) => state.auth);
+
   const [characterInfo, setCharacterInfo] = React.useState<Character>(
     {} as Character
   );
@@ -29,12 +31,29 @@ export default function CharacterContextActions() {
     }
     fetchCharacter();
     setLoading(false);
-  }, [currentContext.contextId]);
+  }, [
+    currentContext.contextId,
+    authState.loggedIn,
+    characterState.currentCharacter,
+  ]);
 
   // TODO: Get character info from the database using contextId and populate the context options, (send money, mail, etc.)
   if (loading) {
     return <div>Loading...</div>;
   }
   // TODO: Tay, you can use this to make the context menu for characters. At this point you have the character info in the characterInfo variable.
-  return <div>{characterInfo.name}</div>;
+  return (
+    <>
+      {/* No user is logged in (Guest View) */}
+      {!authState.loggedIn ? (
+        <div>Open Profile</div>
+      ) : // User is logged in (User View if not current character)
+      characterInfo._id !== characterState.currentCharacter._id ? (
+        <div>Send Money</div>
+      ) : (
+        // User is logged in (User View if current character)
+        <div>Open Profile</div>
+      )}
+    </>
+  );
 }
