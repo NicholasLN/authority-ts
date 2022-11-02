@@ -8,8 +8,8 @@ export default function CharacterContextActions() {
   const currentContext = useSelector((state: RootState) => state.contextMenu);
   const characterState = useSelector((state: RootState) => state.character);
   const authState = useSelector((state: RootState) => state.auth);
-  
-  const [showModal, setShowModal] = useState(false)
+
+  const [showModal, setShowModal] = useState(false);
   const [characterInfo, setCharacterInfo] = React.useState<Character>(
     {} as Character
   );
@@ -45,30 +45,36 @@ export default function CharacterContextActions() {
   }
   // TODO: Tay, you can use this to make the context menu for characters. At this point you have the character info in the characterInfo variable.
   return (
-  <>
+    <>
       {/* No user is logged in (Guest View) */}
       {!authState.loggedIn ? (
         <div>Open Profile</div>
       ) : // User is logged in (User View if not current character)
       characterInfo._id !== characterState.currentCharacter._id ? (
-    <ul>
-    <li><b>{characterInfo.name}</b></li>
-    <br />
-    <li>
-      <button className="text-blue-400 font-bold" onClick={() => setShowModal(true)}>
-      Send Funds
-      </button>
+        <ul>
+          <li>
+            <b>{characterInfo.name}</b>
+          </li>
+          <br />
+          <li>
+            <button
+              className="text-blue-400 font-bold"
+              onClick={() => setShowModal(true)}
+            >
+              Send Funds
+            </button>
 
-      <SendCampaignFundsModal 
-      onClose={() => setShowModal(false)} 
-      shown={showModal} 
-      character={{
-        id: characterInfo._id,
-        name: characterInfo.name,
-        currentBalance: "0"
-      }}/>
-    </li>
-  </ul>
+            <SendCampaignFundsModal
+              onClose={() => setShowModal(false)}
+              shown={showModal}
+              character={{
+                id: characterInfo._id,
+                name: characterInfo.name,
+                currentBalance: "0",
+              }}
+            />
+          </li>
+        </ul>
       ) : (
         // User is logged in (User View if current character)
         <div>Open Profile</div>
