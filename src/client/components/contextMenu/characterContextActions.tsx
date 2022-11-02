@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { invalidateElement } from "../../redux/reducers/contextSlice";
 import getPage from "../../utils/getPage";
+import SendCampaignFundsModal from "../modals/SendCampFundsModal";
 
 export default function CharacterContextActions() {
   const currentContext = useSelector((state: RootState) => state.contextMenu);
+  const [showModal, setShowModal] = useState(false)
   const [characterInfo, setCharacterInfo] = React.useState<Character>(
     {} as Character
   );
@@ -35,5 +37,24 @@ export default function CharacterContextActions() {
     return <div>Loading...</div>;
   }
   // TODO: Tay, you can use this to make the context menu for characters. At this point you have the character info in the characterInfo variable.
-  return <div>{characterInfo.name}</div>;
+  return (
+    <ul>
+    <li><b>{characterInfo.name}</b></li>
+    <br />
+    <li>
+      <button className="text-blue-400" onClick={() => setShowModal(true)}>
+      Send Funds
+      </button>
+
+      <SendCampaignFundsModal 
+      onClose={() => setShowModal(false)} 
+      shown={showModal} 
+      character={{
+        id: characterInfo._id,
+        name: characterInfo.name,
+        currentBalance: "0"
+      }}/>
+    </li>
+  </ul>
+  )
 }
