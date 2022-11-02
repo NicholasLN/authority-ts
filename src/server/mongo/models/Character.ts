@@ -3,6 +3,7 @@ import mongoose, { ObjectId } from "mongoose";
 interface Character extends mongoose.Document {
   name: string;
   user: ObjectId;
+  age: number;
   gender: string;
   location: string;
   personalityStats: {
@@ -11,7 +12,7 @@ interface Character extends mongoose.Document {
     charisma: number;
     dealmaking: number;
     leadership: number;
-  }
+  };
 }
 
 const characterSchema = new mongoose.Schema<Character>({
@@ -25,15 +26,20 @@ const characterSchema = new mongoose.Schema<Character>({
     ref: "User",
     required: true,
   },
+  age: {
+    type: Number,
+    required: true,
+    default: 18,
+  },
   gender: {
     type: String,
     required: true,
-    unique: false
+    unique: false,
   },
   location: {
     type: String,
     required: true,
-    unique: false
+    unique: false,
   },
   personalityStats: {
     rhetoric: {
@@ -56,7 +62,7 @@ const characterSchema = new mongoose.Schema<Character>({
       type: Number,
       required: true,
     },
-  }
+  },
 });
 
 export default mongoose.model<Character>("Character", characterSchema);

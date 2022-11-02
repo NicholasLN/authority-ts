@@ -4,7 +4,10 @@ import getPage from "../utils/getPage";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout, updateState } from "../redux/reducers/authSlice";
 import { BeatLoader } from "react-spinners";
-import { updateCharacters } from "../redux/reducers/characterSlice";
+import {
+  characterLogout,
+  updateCharacters,
+} from "../redux/reducers/characterSlice";
 
 type UserSessionHandlerProps = {
   children: JSX.Element;
@@ -48,6 +51,7 @@ function userSessionHandler(props: UserSessionHandlerProps) {
             // 2. The user has been deleted
             // 3. And other errors that may occur
             dispatch(logout());
+            dispatch(characterLogout());
           }
         }
       }

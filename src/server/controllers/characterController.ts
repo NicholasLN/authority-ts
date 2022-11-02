@@ -17,53 +17,36 @@ async function createCharacter(
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    var charactersWithSameName = await Character.find({
-      name: req.body.name,
-    });
-    if (charactersWithSameName.length > 0) {
-      return res.status(409).json({
-        errors: [
-          {
-            msg: "Character with this name already exists",
-          },
-        ],
-      });
-    }
-    // Grab the user from the request
-    var user = await User.findById(req.user.id);
-    var userChars = user?.characters;
-    if (
-      userChars &&
-      userChars.length + 1 <= parseInt(process.env.MAX_CHARACTERS_PER_PERSON!)
-    ) {
-      // Create character
-      const character = new Character({
-        name: req.body.name,
-        user: req.user.id,
-      });
-      await character.save();
-      // Check if character was created
-      if (character) {
-        // If character was created, add it to the user's characters
-        user?.characters.push(character._id);
-        await user?.save();
-        // Send the character back to the user
-        return res.status(200).json({
-          message: "Character created",
-          character,
+    const { name, gender, location, personalityStats } = req.body;
+    const sumValues = (obj: object) =>
+      Object.values(obj).reduce((a, b) => a + b, 0);
+    if (sumValues(personalityStats) == 50) {
+      const user = await User.findById(req.user.id);
+      if (user) {
+        const newChar = new Character({
+          name,
+          user: req.user.id,
+          age: 18,
+          gender,
+          location,
+          personalityStats,
         });
+        // Push the new character to the user's character array
+        await newChar.save();
+        user.characters.push(newChar._id);
+        await user.save();
+
+        return res
+          .status(200)
+          .json({ characters: user.characters, character: newChar.toJSON() });
       }
     } else {
-      return res.status(409).json({
-        errors: [
-          {
-            msg: "You have reached the maximum number of characters",
-          },
-        ],
-      });
+      return res
+        .status(422)
+        .json({ errors: [{ msg: "Personality Stats must add up to 50" }] });
     }
-  } catch (err: any) {
-    next(err);
+  } catch (e) {
+    return next(e);
   }
 }
 

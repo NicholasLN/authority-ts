@@ -1,4 +1,11 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import {
+  newCharacter,
+  switchCharacter,
+  updateCharacters,
+} from "../../redux/reducers/characterSlice";
+import postPage from "../../utils/postPage";
 import Modal from "../struct/Modal";
 
 type CreateCharacterModalProps = {
@@ -7,14 +14,39 @@ type CreateCharacterModalProps = {
 };
 
 export default function CreateCharacterModal(props: CreateCharacterModalProps) {
-  const [form, setForm] = React.useState({});
-  const [skills, setSkills] = React.useState({
-    rhetoric: 10,
-    intelligence: 10,
-    charisma: 10,
-    dealMaking: 10,
-    leadership: 10,
+  const [form, setForm] = React.useState<Character>({
+    name: "",
+    gender: "Man",
+    location: "Fictionland",
+  } as Character);
+  const [skills, setSkills] = React.useState<PersonalityStats>({
+    rhetoric: 0,
+    intelligence: 0,
+    charisma: 0,
+    dealmaking: 0,
+    leadership: 0,
   });
+
+  const dispatch = useDispatch();
+
+  const createCharacter = async () => {
+    var formObj = {
+      name: form.name,
+      gender: form.gender,
+      location: form.location,
+      personalityStats: skills,
+    };
+    var resp = await postPage("/api/character/create", formObj, true).catch(
+      (err) => {
+        console.log(err);
+      }
+    );
+    if (resp) {
+      dispatch(newCharacter(resp.data.character));
+      props.onClose();
+    }
+  };
+
   return (
     <Modal
       modalTitle="Create Character"
@@ -149,13 +181,20 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
            */}
           <div className="mx-auto">
             <button
-              disabled={Object.values(skills).reduce((a, b) => a + b, 0) !== 50}
+              disabled={
+                Object.values(skills).reduce((a, b) => a + b, 0) !== 50 &&
+                form.name !== ""
+              }
               className={
-                Object.values(skills).reduce((a, b) => a + b, 0) === 50
+                Object.values(skills).reduce((a, b) => a + b, 0) === 50 &&
+                form.name !== ""
                   ? "bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   : "bg-gray-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               }
               type="button"
+              onClick={() => {
+                createCharacter();
+              }}
             >
               Create Character
             </button>

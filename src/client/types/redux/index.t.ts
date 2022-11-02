@@ -17,7 +17,7 @@ interface RootState {
   };
   character: {
     currentCharacter: Character;
-    characters: Array<Character>;
+    characters: Character[];
   };
   contextMenu: {
     contextType: string;
@@ -28,14 +28,17 @@ interface RootState {
 interface Character {
   _id: string;
   name: string;
+  age: number;
   user: string;
   gender: string;
   location: string;
-  personalityStats: {
-    rhetoric: number;
-    intelligence: number;
-    charisma: number;
-    dealmaking: number;
-    leadership: number;
-  };
+  personalityStats: PersonalityStats;
+}
+
+interface PersonalityStats {
+  rhetoric: number;
+  intelligence: number;
+  charisma: number;
+  dealmaking: number;
+  leadership: number;
 }

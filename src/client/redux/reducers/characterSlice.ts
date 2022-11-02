@@ -1,12 +1,19 @@
 import Cookies from "js-cookie";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+type charSliceState = {
+  currentCharacter: Character | boolean;
+  characters: Character[];
+};
+
+const initialState: charSliceState = {
+  currentCharacter: false,
+  characters: [],
+};
 
 export const charSlice = createSlice({
   name: "character",
-  initialState: {
-    currentCharacter: false,
-    characters: [],
-  },
+  initialState,
   reducers: {
     updateCharacters: (state, action) => {
       state.characters = action.payload;
@@ -45,9 +52,19 @@ export const charSlice = createSlice({
       state.characters = [];
       state.currentCharacter = false;
     },
+    newCharacter: (state, action) => {
+      var char: Character = action.payload;
+      state.characters.push(char);
+      state.currentCharacter = char;
+      Cookies.set("current_character", action.payload._id);
+    },
   },
 });
 
-export const { updateCharacters, switchCharacter, characterLogout } =
-  charSlice.actions;
+export const {
+  updateCharacters,
+  switchCharacter,
+  characterLogout,
+  newCharacter,
+} = charSlice.actions;
 export default charSlice.reducer;
