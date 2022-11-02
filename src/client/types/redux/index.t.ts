@@ -30,4 +30,13 @@ interface Character {
   _id: string;
   name: string;
   user: string;
+  gender: string;
+  location: string;
+  personalityStats: {
+    rhetoric: number;
+    intelligence: number;
+    charisma: number;
+    dealmaking: number;
+    leadership: number;
+  }
 }

@@ -3,6 +3,15 @@ import mongoose, { ObjectId } from "mongoose";
 interface Character extends mongoose.Document {
   name: string;
   user: ObjectId;
+  gender: string;
+  location: string;
+  personalityStats: {
+    rhetoric: number;
+    intelligence: number;
+    charisma: number;
+    dealmaking: number;
+    leadership: number;
+  }
 }
 
 const characterSchema = new mongoose.Schema<Character>({
@@ -16,6 +25,38 @@ const characterSchema = new mongoose.Schema<Character>({
     ref: "User",
     required: true,
   },
+  gender: {
+    type: String,
+    required: true,
+    unique: false
+  },
+  location: {
+    type: String,
+    required: true,
+    unique: false
+  },
+  personalityStats: {
+    rhetoric: {
+      type: Number,
+      required: true,
+    },
+    intelligence: {
+      type: Number,
+      required: true,
+    },
+    charisma: {
+      type: Number,
+      required: true,
+    },
+    dealmaking: {
+      type: Number,
+      required: true,
+    },
+    leadership: {
+      type: Number,
+      required: true,
+    },
+  }
 });
 
 export default mongoose.model<Character>("Character", characterSchema);
