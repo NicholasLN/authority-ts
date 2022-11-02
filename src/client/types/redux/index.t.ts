@@ -37,5 +37,5 @@ interface Character {
     charisma: number;
     dealmaking: number;
     leadership: number;
-  }
+  };
 }

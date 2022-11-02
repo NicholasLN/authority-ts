@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import CharacterContextActions from "./characterContextOptions";
+import CharacterContextActions from "./characterContextActions";
 
 export default function contextActions() {
   const [loading, setLoading] = useState(true);
@@ -8,13 +8,12 @@ export default function contextActions() {
 
   var currentContext = useSelector((state: RootState) => state.contextMenu);
 
-  useEffect(() => {}, [currentContext]);
+  useEffect(() => {}, [currentContext.contextType]);
 
   switch (currentContext.contextType) {
     case "Character":
-      // TODO: Turn this into a component. Populate context options / modals there.
-      return <CharacterContextActions contextId={currentContext.contextId} />;
+      return <CharacterContextActions />;
     default:
-      return <div></div>;
+      return <div>No Ongoing Context</div>;
   }
 }

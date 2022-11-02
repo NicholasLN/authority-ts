@@ -73,14 +73,14 @@ async function getCharacter(req: Request, res: Response, next: NextFunction) {
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    
-    const character = await Character.findById(req.params.id)
+
+    const character = await Character.findById(req.params.id);
 
     if (character) {
-      return res.status(200).json({...character.toJSON()})
+      return res.status(200).json({ ...character.toJSON() });
     }
   } catch (e) {
-    next(e)
+    return res.status(500).json({ errors: [{ msg: "Something went wrong" }] });
   }
 }
 
