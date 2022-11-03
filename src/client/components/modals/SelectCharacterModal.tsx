@@ -35,24 +35,33 @@ export default function SelectCharacterModal(props: SelectCharacterModalProps) {
         //   the currently selected character, display a checkmark instead of the button.
         <div
           onClick={() => switchCharButton(char)}
-          className="flex flex-row justify-between w-full"
+          className="flex flex-row w-full p-0.5"
           key={char._id}
         >
-          <div className="flex flex-row">
-            <div className="flex flex-col justify-center w-12 h-12 bg-background-body rounded-full overflow-hidden">
-              <img
-                className="object-cover w-full h-full"
-                src={defaultPic}
-                alt="Profile Picture"
-              />
-            </div>
-            <div className="flex flex-col justify-center ml-2">
-              <div>{char.name}</div>
-            </div>
-            <div className="flex flex-col justify-center">
-              {charState.currentCharacter?._id === char._id && (
-                <div className="text-green-500 px-2 text-xl">✓</div>
-              )}
+          <div className={`flex flex-row justify-center w-full rounded-md`}>
+            <div
+              className={`
+              flex flex-row justify-center items-center hover:bg-gray-200
+              ${char._id == charState.currentCharacter._id && "bg-gray-400"}
+              p-1 rounded-md`}
+            >
+              <div className="flex flex-col justify-center w-12 h-12 bg-background-body rounded-full overflow-hidden">
+                <img
+                  className="object-cover w-full h-full"
+                  src={defaultPic}
+                  alt="Profile Picture"
+                />
+              </div>
+              <div className="flex flex-col justify-center ml-2">
+                <div>{char.name}</div>
+                <div className="text-xs text-wet-asphalt italic">
+                  <span>{char.location}</span>
+                  <span className="mx-1">|</span>
+                  <span>{char.gender}</span>
+                  <span className="mx-1">|</span>
+                  <span>{char.age} years old</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

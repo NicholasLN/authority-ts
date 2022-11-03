@@ -31,8 +31,8 @@ export default function Modal(props: ModalProps) {
       } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 h-full backdrop-brightness-50`}
     >
       <div className="flex flex-col items-center justify-center h-full">
-        <div className="flex flex-col h-1/2 w-1/2 sm:w-8/12 xs:w-10/12 bg-background-body rounded-md">
-          <div className="flex flex-row justify-between w-full h-12 bg-green-sea">
+        <div className="flex flex-col bg-background-body rounded-md">
+          <div className="flex flex-row justify-between w-full h-12 bg-green-sea px-3">
             <h1 className="flex flex-grow items-center justify-center text-background-body">
               {props.modalTitle}
             </h1>
@@ -58,7 +58,7 @@ export default function Modal(props: ModalProps) {
               </button>
             )}
           </div>
-          <div className="flex flex-col flex-grow w-full h-full text-center text-black text-lg">
+          <div className="flex flex-col flex-grow w-full h-full text-center text-black text-lg p-4">
             {props.children}
           </div>
         </div>
