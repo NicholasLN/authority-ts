@@ -48,22 +48,38 @@ export default function CharacterContextActions() {
     <>
       {/* No user is logged in (Guest View) */}
       {!authState.loggedIn ? (
-        <div>Open Profile</div>
+        <>
+          <li>
+            <a className="flex items-center justify-center text-white rounded-lg text-lg">
+              <span>{characterInfo.name}</span>
+            </a>
+          </li>
+          {/* add a divider line */}
+          <hr className="border-gray-600" />
+          <li>
+            <a className="flex items-center justify-center text-white rounded-lg">
+              <span>Dashboard</span>
+            </a>
+          </li>
+        </>
       ) : // User is logged in (User View if not current character)
       characterInfo._id !== characterState.currentCharacter._id &&
         characterState.currentCharacter ? (
-        <ul>
+        <>
           <li>
-            <b>{characterInfo.name}</b>
+            <a className="flex items-center justify-center text-white rounded-lg text-lg">
+              <span>{characterInfo.name}</span>
+            </a>
           </li>
-          <br />
+          <hr className="border-gray-600" />
           <li>
-            <button
-              className="text-blue-400 font-bold"
+            <a
+              type="button"
+              className="flex items-center justify-center text-white text-center rounded-lg cursor-pointer"
               onClick={() => setShowSendCFModal(true)}
             >
               Send Funds
-            </button>
+            </a>
 
             <SendCampaignFundsModal
               onClose={() => setShowSendCFModal(false)}
@@ -75,10 +91,23 @@ export default function CharacterContextActions() {
               }}
             />
           </li>
-        </ul>
+        </>
       ) : (
         // User is logged in (User View if current character)
-        <div>Open Profile</div>
+        <>
+          <li>
+            <a className="flex items-center justify-center text-white rounded-lg text-lg">
+              <span>{characterInfo.name}</span>
+            </a>
+          </li>
+          {/* add a divider line */}
+          <hr className="border-gray-600" />
+          <li>
+            <a className="flex items-center justify-center text-white rounded-lg">
+              <span>Dashboard</span>
+            </a>
+          </li>
+        </>
       )}
     </>
   );
