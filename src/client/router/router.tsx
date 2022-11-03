@@ -9,17 +9,21 @@ import Home from "../components/pages/Home";
 import Login from "../components/pages/Login";
 import Register from "../components/pages/Register";
 import Profile from "../components/pages/Profile";
-import CharacterCreate from "../components/pages/Character/create";
+import Character from "../components/pages/Character";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/character/create" element={<CharacterCreate />} />
-    </>
+    <Route path="/">
+      <Route path="" element={<Home />} />
+      <Route path="login" element={<Login />} />
+      <Route path="register" element={<Register />} />
+      <Route path="profile" element={<Profile />} />
+      {/* Character Paths */}
+      <Route path="character">
+        <Route path="" element={<Character />} />
+        <Route path=":id/" element={<Character />} />
+      </Route>
+    </Route>
   )
 );
 

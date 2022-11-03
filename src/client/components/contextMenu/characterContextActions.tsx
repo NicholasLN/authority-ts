@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { invalidateElement } from "../../redux/reducers/contextSlice";
 import getPage from "../../utils/getPage";
 import SendCampaignFundsModal from "../modals/SendCampFundsModal";
@@ -50,9 +51,12 @@ export default function CharacterContextActions() {
       {!authState.loggedIn ? (
         <>
           <li>
-            <a className="flex items-center justify-center text-white rounded-lg text-lg">
+            <Link
+              to={`/character/?id=${characterInfo._id}`}
+              className="flex items-center justify-center text-white rounded-lg text-lg"
+            >
               <span>{characterInfo.name}</span>
-            </a>
+            </Link>
           </li>
           {/* add a divider line */}
           <hr className="border-gray-600" />
@@ -67,9 +71,12 @@ export default function CharacterContextActions() {
         characterState.currentCharacter ? (
         <>
           <li>
-            <a className="flex items-center justify-center text-white rounded-lg text-lg">
+            <Link
+              to={`/character/?id=${characterInfo._id}`}
+              className="flex items-center justify-center text-white rounded-lg text-lg"
+            >
               <span>{characterInfo.name}</span>
-            </a>
+            </Link>
           </li>
           <hr className="border-gray-600" />
           <li>
@@ -96,9 +103,12 @@ export default function CharacterContextActions() {
         // User is logged in (User View if current character)
         <>
           <li>
-            <a className="flex items-center justify-center text-white rounded-lg text-lg">
+            <Link
+              to={`/character/?id=${characterInfo._id}`}
+              className="flex items-center justify-center text-white rounded-lg text-lg"
+            >
               <span>{characterInfo.name}</span>
-            </a>
+            </Link>
           </li>
           {/* add a divider line */}
           <hr className="border-gray-600" />

@@ -58,7 +58,7 @@ export default function Modal(props: ModalProps) {
               </button>
             )}
           </div>
-          <div className="flex flex-col flex-grow w-full h-full text-center text-black text-lg p-4">
+          <div className="flex flex-col flex-grow w-full h-full text-center text-black text-lg p-4 px-6">
             {props.children}
           </div>
         </div>

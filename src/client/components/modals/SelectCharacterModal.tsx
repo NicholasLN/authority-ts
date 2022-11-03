@@ -18,7 +18,9 @@ export default function SelectCharacterModal(props: SelectCharacterModalProps) {
   const dispatch = useDispatch();
 
   const switchCharButton = function (char: Character) {
-    dispatch(switchCharacter(char));
+    if (charState.currentCharacter._id !== char._id) {
+      dispatch(switchCharacter(char));
+    }
   };
 
   useEffect(() => {}, [charState]);
@@ -41,9 +43,14 @@ export default function SelectCharacterModal(props: SelectCharacterModalProps) {
           <div className={`flex flex-row justify-center w-full rounded-md`}>
             <div
               className={`
-              flex flex-row justify-center items-center hover:bg-gray-200
-              ${char._id == charState.currentCharacter._id && "bg-gray-400"}
-              p-1 rounded-md`}
+              cursor-pointer 
+              flex flex-row justify-center items-center
+              ${
+                char._id == charState.currentCharacter._id
+                  ? "bg-gray-400 cursor-default"
+                  : "hover:bg-gray-200"
+              }
+              p-2 rounded-md`}
             >
               <div className="flex flex-col justify-center w-12 h-12 bg-background-body rounded-full overflow-hidden">
                 <img
