@@ -1,15 +1,19 @@
 import axios, { AxiosResponse } from "axios";
+import Cookies from "js-cookie";
 
 export default async function getPage(
   url: string,
-  accessToken: any = false
+  accessToken: boolean = false,
+  attachCharacter: boolean = false
 ): Promise<AxiosResponse> {
-  var cfg = {};
+  var cfg: any = {};
   if (accessToken) {
     cfg = {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      headers: { Authorization: `Bearer ${Cookies.get("access_token")}` },
     };
   }
-
+  if (attachCharacter) {
+    cfg.headers["current_character"] = Cookies.get("current_character");
+  }
   return await axios.get(url, cfg);
 }

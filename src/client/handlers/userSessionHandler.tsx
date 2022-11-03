@@ -32,7 +32,7 @@ function userSessionHandler(props: UserSessionHandlerProps) {
         // If the user has an access token, we'll check/update the session (if it's valid and not expired/malformed)
         if (access_token != "null") {
           try {
-            var resp = await getPage("/api/user/profile", access_token);
+            var resp = await getPage("/api/user/profile", true, true);
             // If the response is 200, we'll update the state with the new session
             if (resp.data) {
               // Restore the session if the state is empty (i.e. the user has refreshed the page or revisited the site after a while)

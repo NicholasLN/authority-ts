@@ -1,5 +1,5 @@
 // authStrategies.ts
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from "express";
 
 function isLoggedIn(req: Request, res: Response, next: NextFunction) {
   if (req.user.id !== "false") {
@@ -22,6 +22,18 @@ function isAdmin(req: Request, res: Response, next: NextFunction) {
     next();
   } else {
     res.status(401).send("You do not have administrator privileges.");
+  }
+}
+
+function charBelongsToUser(req: Request, res: Response, next: NextFunction) {
+  if (req.currentCharacter) {
+    if (req.currentCharacter.user == req.user.id) {
+      next();
+    } else {
+      res.status(401).send("You do not own this character.");
+    }
+  } else {
+    res.status(401).send("You do not own this character.");
   }
 }
 

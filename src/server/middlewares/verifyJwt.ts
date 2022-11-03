@@ -1,8 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import Character from "../mongo/models/Character";
 
-import User from '../mongo/models/User';
-import { logError } from '../utils/logging';
+import User from "../mongo/models/User";
+import { logError } from "../utils/logging";
 
 interface JwtPayload {
   id: string;

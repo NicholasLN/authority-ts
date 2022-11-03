@@ -9,6 +9,7 @@ import userRouter from "./routes/user";
 import characterRouter from "./routes/character";
 import initGlobalMethods from "./utils/globalMethods";
 import { logExpress } from "./utils/logging";
+import attachCharacter from "./middlewares/attachCharacter";
 
 // Initialize global methods
 initGlobalMethods();
@@ -18,6 +19,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(jwtMiddleware);
+app.use(attachCharacter);
 
 // user routes
 app.use("/api/user", userRouter);
