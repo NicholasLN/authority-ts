@@ -23,7 +23,7 @@ export default function Body(props: BodyProps) {
       <div className="flex flex-grow w-full h-11/12">
         <Sidebar />
         {/* Content */}
-        <div className="bg-wet-asphalt p-3 w-full">
+        <div className="bg-slate-900 p-2 w-full">
           <div className="flex flex-col w-full h-full bg-background-body opacity-95">
             {/* Center all content from hereon */}
             <div className="flex flex-col items-center w-full h-full p-2">
