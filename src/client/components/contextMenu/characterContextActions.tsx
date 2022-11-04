@@ -5,7 +5,7 @@ import { invalidateElement } from "../../redux/reducers/contextSlice";
 import getPage from "../../utils/getPage";
 import SendCampaignFundsModal from "../modals/SendCampFundsModal";
 
-export default function CharacterContextActions() {
+function CharacterContextActions() {
   const currentContext = useSelector((state: RootState) => state.contextMenu);
   const characterState = useSelector((state: RootState) => state.character);
   const authState = useSelector((state: RootState) => state.auth);
@@ -19,7 +19,6 @@ export default function CharacterContextActions() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("useEffect CharacterContextActions");
     async function fetchCharacter() {
       const resp = await getPage(
         `/api/character/read/${currentContext.contextId}`
@@ -122,3 +121,5 @@ export default function CharacterContextActions() {
     </>
   );
 }
+
+export default React.memo(CharacterContextActions);
