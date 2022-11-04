@@ -23,6 +23,9 @@ interface RootState {
     contextType: string;
     contextId: string;
   };
+  alerts: {
+    alerts: Alert[];
+  };
 }
 
 interface Character {
@@ -42,3 +45,10 @@ interface PersonalityStats {
   dealmaking: number;
   leadership: number;
 }
+
+type Alert = {
+  type: string;
+  message: string;
+  timeout: number;
+  id: number;
+};

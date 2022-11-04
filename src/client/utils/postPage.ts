@@ -17,6 +17,5 @@ export default async function postPage(
   if (attachCharacter) {
     cfg.headers["current_character"] = Cookies.get("current_character");
   }
-
   return await axios.post(url, data, cfg);
 }

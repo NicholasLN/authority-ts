@@ -6,6 +6,7 @@ import store from "./redux/store";
 import "./tailwind.css";
 import WindowFocusHandler from "./handlers/windowFocusHandler";
 import UserSessionHandler from "./handlers/userSessionHandler";
+import AlertHandler from "./handlers/alertHandler";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -16,6 +17,7 @@ root.render(
     <WindowFocusHandler>
       <UserSessionHandler>
         <App />
+        <AlertHandler />
       </UserSessionHandler>
     </WindowFocusHandler>
   </Provider>

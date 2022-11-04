@@ -6,6 +6,8 @@ import { login } from "../../redux/reducers/authSlice";
 import Body from "../struct/Body";
 import Cookies from "js-cookie";
 import { updateCharacters } from "../../redux/reducers/characterSlice";
+import { addAlert } from "../../redux/reducers/alertSlice";
+import { AxiosError } from "axios";
 
 export default function Login() {
   const userState = useSelector((state: RootState) => state.auth);
@@ -20,16 +22,39 @@ export default function Login() {
     }
   }, []);
   const loginSubmit = async () => {
-    var res = await postPage("/api/user/login", {
+    var res: any = await postPage("/api/user/login", {
       username,
       password,
       remember: false,
-    });
-    if (res.status == 200) {
-      dispatch(login(res.data));
-      dispatch(updateCharacters(res.data.user.characters));
-      navigate("/profile");
-    }
+    })
+      .catch((err: any) => {
+        var errors = err.response?.data.errors;
+        if (errors) {
+          errors.forEach((error: any) => {
+            dispatch(
+              addAlert({
+                message: error.msg,
+                type: "error",
+                timeout: 5000,
+              } as Alert)
+            );
+          });
+        }
+      })
+      .then((res) => {
+        if (res) {
+          dispatch(login(res.data));
+          dispatch(updateCharacters(res.data.user.characters));
+          navigate("/profile");
+          dispatch(
+            addAlert({
+              message: "Logged in successfully",
+              type: "success",
+              timeout: 5000,
+            } as Alert)
+          );
+        }
+      });
   };
   return (
     <Body>

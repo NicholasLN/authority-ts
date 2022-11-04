@@ -10,7 +10,7 @@ import {
 } from "../redux/reducers/characterSlice";
 
 type UserSessionHandlerProps = {
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[] | null;
 };
 
 function userSessionHandler(props: UserSessionHandlerProps) {

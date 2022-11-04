@@ -95,9 +95,7 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
         });
       }
     }
-    return res.status(401).json({
-      message: "Username or password is incorrect",
-    });
+    return res.status(401).json({ errors: [{ msg: "User not found" }] });
   } catch (err: any) {
     next(err);
   }

@@ -4,6 +4,7 @@ import windowFocusReducer from "./reducers/windowFocusSlice";
 import uiReducer from "./reducers/uiSlice";
 import charReducer from "./reducers/characterSlice";
 import contextReducer from "./reducers/contextSlice";
+import alertReducer from "./reducers/alertSlice";
 
 export default configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export default configureStore({
     ui: uiReducer,
     character: charReducer,
     contextMenu: contextReducer,
+    alerts: alertReducer,
   },
 });
