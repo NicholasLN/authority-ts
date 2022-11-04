@@ -9,7 +9,7 @@ type BodyProps = {
   children: JSX.Element | JSX.Element[] | ReactElement | ReactElement[];
 };
 
-export default function Body(props: BodyProps) {
+function Body(props: BodyProps) {
   const userState = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
@@ -36,3 +36,4 @@ export default function Body(props: BodyProps) {
     </div>
   );
 }
+export default React.memo(Body);
