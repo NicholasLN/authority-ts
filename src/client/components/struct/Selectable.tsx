@@ -11,30 +11,27 @@ type Props = {
 export default function selectable(props: Props) {
   var dispatch = useDispatch();
   const [focused, setFocused] = useState(false);
-  function clickedAlert(ref: any) {
-    useEffect(() => {
-      function handleClickInside(event: { target: any }) {
-        setFocused(false);
-        if (ref.current && ref.current.contains(event.target)) {
-          setFocused(true);
+  const wrapperRef: any = useRef(null);
+  useEffect(() => {
+    function handleClickInside(event: { target: any }) {
+      setFocused(false);
+      if (wrapperRef.current && wrapperRef.current.contains(event.target)) {
+        setFocused(true);
 
-          dispatch(
-            changeElement({
-              contextType: ref.current.id,
-              contextId: ref.current.attributes["data-contextid"].value,
-            })
-          );
-          console.log("you clicked inside oh my god");
-        }
+        dispatch(
+          changeElement({
+            contextType: wrapperRef.current.id,
+            contextId: wrapperRef.current.attributes["data-contextid"].value,
+          })
+        );
+        console.log("clicked inside");
       }
-      document.addEventListener("mousedown", handleClickInside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickInside);
-      };
-    }, [ref]);
-  }
-  const wrapperRef = useRef(null);
-  clickedAlert(wrapperRef);
+    }
+    document.addEventListener("mousedown", handleClickInside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickInside);
+    };
+  }, [wrapperRef]);
 
   return (
     <div
