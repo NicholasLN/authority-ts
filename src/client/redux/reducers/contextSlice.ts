@@ -17,12 +17,10 @@ export const currentElement = createSlice({
     ) => {
       state.contextType = action.payload.contextType;
       state.contextId = action.payload.contextId;
-      console.log("changeElement", state.contextType, state.contextId);
     },
     invalidateElement: (state) => {
       state.contextType = "Default";
       state.contextId = 0;
-      console.log("invalidateElement", state.contextType, state.contextId);
     },
   },
 });
