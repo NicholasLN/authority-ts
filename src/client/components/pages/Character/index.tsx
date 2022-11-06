@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
+import { quickErrorAlert } from "../../../redux/reducers/alertSlice";
 import getPage from "../../../utils/getPage";
 import Body from "../../struct/Body";
 
@@ -9,6 +11,7 @@ export default function Character() {
   const characterState = useSelector((state: RootState) => state.character);
   const [searchParams] = useSearchParams();
   const nav = useNavigate();
+  const dispatch = useDispatch();
 
   const [charInfo, setCharInfo] = React.useState<Character>({} as Character);
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -32,6 +35,9 @@ export default function Character() {
         })
         .catch((err) => {
           nav("/");
+          dispatch(
+            quickErrorAlert("Failed to load character. They may not exist.")
+          );
         });
     }
     getCharacter();

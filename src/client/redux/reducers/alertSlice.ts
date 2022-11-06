@@ -10,6 +10,14 @@ export const alertsSlice = createSlice({
     alerts: [] as Alert[],
   },
   reducers: {
+    quickErrorAlert: (state, action: PayloadAction<string>) => {
+      state.alerts.push({
+        type: "error",
+        message: action.payload,
+        timeout: 5000,
+        id: Date.now(),
+      });
+    },
     addAlert: (state, action: PayloadAction<Alert>) => {
       var randomAlertId = Math.floor(Math.random() * 100000000000000000);
       action.payload.id = randomAlertId;
@@ -24,5 +32,5 @@ export const alertsSlice = createSlice({
   },
 });
 
-export const { addAlert, removeAlert } = alertsSlice.actions;
+export const { quickErrorAlert, addAlert, removeAlert } = alertsSlice.actions;
 export default alertsSlice.reducer;
