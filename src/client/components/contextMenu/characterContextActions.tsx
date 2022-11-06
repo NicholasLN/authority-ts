@@ -15,29 +15,35 @@ function CharacterContextActions() {
     {} as Character
   );
   const [loading, setLoading] = useState(true);
-
   const dispatch = useDispatch();
 
+  const cachedCharacter = React.useMemo(() => {
+    return characterState.characters.find(
+      (char) => char._id === currentContext.contextId
+    );
+  }, [characterState.characters, currentContext.contextId]);
+
   useEffect(() => {
-    async function fetchCharacter() {
-      const resp = await getPage(
-        `/api/character/read/${currentContext.contextId}`
-      ).catch((err) => {
-        dispatch(invalidateElement());
-      });
-      if (resp) {
-        var char: Character = resp.data;
-        setCharacterInfo(char);
+    async function getCharacter() {
+      if (cachedCharacter) {
+        setCharacterInfo(cachedCharacter);
         setLoading(false);
+      } else {
+        await getPage(`/api/character/read/${currentContext.contextId}`)
+          .then((res) => {
+            setCharacterInfo(res.data);
+            setLoading(false);
+          })
+          .catch((err) => {
+            dispatch(invalidateElement());
+          });
       }
     }
-    fetchCharacter();
-    setLoading(false);
-  }, [
-    currentContext.contextId,
-    authState.loggedIn,
-    characterState.currentCharacter,
-  ]);
+    getCharacter();
+    return () => {
+      setLoading(true);
+    };
+  }, [currentContext.contextId, cachedCharacter, dispatch]);
 
   // TODO: Get character info from the database using contextId and populate the context options, (send money, mail, etc.)
   if (loading) {
