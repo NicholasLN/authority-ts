@@ -18,7 +18,7 @@ export default function Sidebar(props: SidebarProps) {
         when uiState.sidebar is false. Toggling the button should trigger an animation to expand it again to w-24 */}
       <div
         className={`flex flex-col h-full bg-wet-asphalt whitespace-nowrap ${
-          uiState.hideSidebar ? "w-8" : "w-36 md:w-36 sm:w-24 xs:w-24"
+          uiState.hideSidebar ? "w-8" : "w-36 md:w-36 sm:w-24 xs:w-28"
         }`}
       >
         <button
