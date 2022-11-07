@@ -3,6 +3,7 @@ import mongoose, { ObjectId } from "mongoose";
 interface Character extends mongoose.Document {
   name: string;
   user: ObjectId;
+  picture: string;
   age: number;
   gender: string;
   location: string;
@@ -25,6 +26,10 @@ const characterSchema = new mongoose.Schema<Character>({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
+  },
+  picture: {
+    type: String,
+    default: "default.png",
   },
   age: {
     type: Number,

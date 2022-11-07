@@ -54,8 +54,8 @@ export default function SelectCharacterModal(props: SelectCharacterModalProps) {
             >
               <div className="flex flex-col justify-center w-12 h-12 bg-background-body rounded-full overflow-hidden">
                 <img
-                  className="object-cover w-full h-full"
-                  src={defaultPic}
+                  className="object-cover w-full h-full shadow-md"
+                  src={char.picture ? char.picture : defaultPic}
                   alt="Profile Picture"
                 />
               </div>

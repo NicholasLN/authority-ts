@@ -37,4 +37,4 @@ function charBelongsToUser(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export { isLoggedIn, notLoggedIn, isAdmin };
+export { isLoggedIn, notLoggedIn, isAdmin, charBelongsToUser };

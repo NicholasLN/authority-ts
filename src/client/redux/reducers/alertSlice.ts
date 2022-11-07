@@ -18,6 +18,14 @@ export const alertsSlice = createSlice({
         id: Date.now(),
       });
     },
+    quickSuccessAlert: (state, action: PayloadAction<string>) => {
+      state.alerts.push({
+        type: "success",
+        message: action.payload,
+        timeout: 5000,
+        id: Date.now(),
+      });
+    },
     addAlert: (state, action: PayloadAction<Alert>) => {
       var randomAlertId = Math.floor(Math.random() * 100000000000000000);
       action.payload.id = randomAlertId;
@@ -32,5 +40,6 @@ export const alertsSlice = createSlice({
   },
 });
 
-export const { quickErrorAlert, addAlert, removeAlert } = alertsSlice.actions;
+export const { quickErrorAlert, quickSuccessAlert, addAlert, removeAlert } =
+  alertsSlice.actions;
 export default alertsSlice.reducer;

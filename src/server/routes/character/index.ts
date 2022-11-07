@@ -1,7 +1,11 @@
 import express from "express";
 import { body, param } from "express-validator";
 import characterController from "../../controllers/characterController";
-import { isLoggedIn, notLoggedIn } from "../../stategies/authStrategies";
+import {
+  charBelongsToUser,
+  isLoggedIn,
+  notLoggedIn,
+} from "../../stategies/authStrategies";
 
 var router = express.Router();
 
@@ -36,6 +40,13 @@ router.get(
   "/read/:id",
   param("id", "ID is required").exists(),
   characterController.getCharacter
+);
+
+router.post(
+  "/updatePicture",
+  isLoggedIn,
+  charBelongsToUser,
+  characterController.updatePicture
 );
 
 export default router;

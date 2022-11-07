@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import http from "http";
 import path from "path";
+import multer from "multer";
 
 import jwtMiddleware from "./middlewares/verifyJwt";
 import initMongoDBConn from "./mongo/init";
@@ -16,12 +17,13 @@ initGlobalMethods();
 dotenv.config();
 
 const app = express();
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
+app.use(multer().single("file"));
+
 app.use(jwtMiddleware);
 app.use(attachCharacter);
-
-// user routes
 app.use("/api/user", userRouter);
 app.use("/api/character", characterRouter);
 

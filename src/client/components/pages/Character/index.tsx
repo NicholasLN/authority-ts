@@ -5,14 +5,19 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 import { quickErrorAlert } from "../../../redux/reducers/alertSlice";
 import getPage from "../../../utils/getPage";
+import ChangePictureModal from "../../modals/CharacterProfile.tsx/ChangePictureModal";
 import Body from "../../struct/Body";
 
 export default function Character() {
   const characterState = useSelector((state: RootState) => state.character);
+  const userState = useSelector((state: RootState) => state.auth);
+
   const [searchParams] = useSearchParams();
   const nav = useNavigate();
   const dispatch = useDispatch();
 
+  const [showChangePictureModal, setShowChangePictureModal] =
+    React.useState(false);
   const [charInfo, setCharInfo] = React.useState<Character>({} as Character);
   const [loading, setLoading] = React.useState<boolean>(true);
 
@@ -41,10 +46,11 @@ export default function Character() {
         });
     }
     getCharacter();
-    return () => {
-      setLoading(true);
-    };
-  }, [searchParams, characterState.currentCharacter]);
+  }, [
+    characterState.currentCharacter,
+    characterState.characters,
+    userState.loggedIn,
+  ]);
 
   if (loading) {
     return (
@@ -56,13 +62,35 @@ export default function Character() {
 
   return (
     <Body>
-      <h1>Character</h1>
-      <p>{charInfo.name}</p>
-      {charInfo._id === characterState.currentCharacter?._id ? (
-        <p>This is u. Bitch</p>
-      ) : (
-        <p>This isn't u. Bitch</p>
-      )}
+      {/* Create a user profile for characters */}
+      {/* It shouldn't be centered, and should instead be left-right, with a circle of the characters picture in the top left. */}
+      <ChangePictureModal
+        shown={showChangePictureModal}
+        onClose={() => setShowChangePictureModal(false)}
+      />
+      <div className="flex flex-col items-center w-full h-full p-3 bg-slate-50 shadow-xl">
+        <img
+          onClick={() => {
+            if (charInfo._id === characterState.currentCharacter._id) {
+              setShowChangePictureModal(true);
+            }
+          }}
+          className={`w-36 h-36 rounded-full shadow-lg object-cover ring-2 ring-gray-300 p-1 ${
+            characterState.currentCharacter._id == charInfo._id
+              ? "hover:ring-4 hover:ring-blue-500 hover:cursor-pointer delay-75"
+              : ""
+          }`}
+          src={charInfo.picture}
+        />
+        <h1 className="text-2xl ">{charInfo.name}</h1>
+        <p className="text-lg">
+          {charInfo._id === characterState.currentCharacter._id ? (
+            <p>This is you.</p>
+          ) : (
+            <p>This isn't you</p>
+          )}{" "}
+        </p>
+      </div>
     </Body>
   );
 }

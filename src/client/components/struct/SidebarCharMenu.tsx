@@ -32,7 +32,11 @@ export default function SidebarCharMenu() {
           <div className="flex flex-col justify-center w-12 h-12 bg-background-body rounded-full overflow-hidden">
             <img
               className="object-cover w-full h-full"
-              src={defaultPic}
+              src={
+                charState.currentCharacter.picture
+                  ? charState.currentCharacter.picture
+                  : defaultPic
+              }
               alt="Profile Picture"
             />
           </div>

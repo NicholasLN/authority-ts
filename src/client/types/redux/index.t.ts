@@ -31,6 +31,7 @@ interface RootState {
 interface Character {
   _id: string;
   name: string;
+  picture: string;
   age: number;
   user: string;
   gender: string;

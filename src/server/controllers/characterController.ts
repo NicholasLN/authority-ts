@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import Character from "../mongo/models/Character";
 import User from "../mongo/models/User";
+import { logError } from "../utils/logging";
+import uploadFile from "../utils/uploadFile";
 
 // Character Controller with following methods: Create, Read, Update, Delete
 // Path: src\server\controllers\characterController.ts
@@ -67,7 +69,59 @@ async function getCharacter(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+async function updatePicture(req: Request, res: Response, next: NextFunction) {
+  console.log(req.file, req.files, req.body);
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    if (req.file) {
+      if (req.currentCharacter) {
+        // GET FILE TYPE
+        const fileType = req.file.mimetype.split("/")[1];
+        if (
+          fileType == "jpeg" ||
+          fileType == "png" ||
+          fileType == "jpg" ||
+          fileType == "gif"
+        ) {
+          var newFile = await uploadFile(
+            req.file,
+            `characters/${req.currentCharacter._id}.${fileType}`
+          );
+          if (newFile.Location) {
+            var character = await Character.findById(req.currentCharacter._id);
+            if (character) {
+              character.picture = newFile.Location;
+              await character.save();
+              var user = await User.findById(req.user.id)
+                .populate("characters")
+                .select("-password");
+              if (user) {
+                return res.status(200).json(user);
+              }
+            }
+          }
+          return res.status(200).json({ file: newFile });
+        }
+        return res.status(422).json({
+          errors: [{ msg: "File type must be jpeg, png, jpg, or gif" }],
+        });
+      }
+    }
+  } catch (e) {
+    logError(e as any);
+    return res.status(500).json({ errors: [{ msg: "Something went wrong" }] });
+  }
+
+  return res
+    .status(500)
+    .json({ errors: [{ msg: "?This is so fucking annoying" }] });
+}
+
 export default {
   createCharacter,
   getCharacter,
+  updatePicture,
 };

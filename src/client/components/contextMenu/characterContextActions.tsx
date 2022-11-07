@@ -47,7 +47,7 @@ function CharacterContextActions() {
 
   // TODO: Get character info from the database using contextId and populate the context options, (send money, mail, etc.)
   if (loading) {
-    return <div>Loading...</div>;
+    return <></>;
   }
   // TODO: Tay, you can use this to make the context menu for characters. At this point you have the character info in the characterInfo variable.
   return (

@@ -10,6 +10,7 @@ declare global {
   interface Character {
     name: string;
     user: string;
+    picture: string;
     age: number;
     gender: string;
     location: string;

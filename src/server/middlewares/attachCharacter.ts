@@ -16,7 +16,7 @@ async function attachCharacter(
     );
     if (character) {
       req.currentCharacter = character;
-      console.log("Character attached to request", req.currentCharacter);
+      //console.log("Character attached to request", req.currentCharacter);
     }
   } else {
     req.currentCharacter = null;
