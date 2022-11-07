@@ -36,7 +36,8 @@ export default function ChangePictureModal(props: Props) {
         true,
         true
       );
-      if (resp) {
+      // TODO: Better error handling than this garbage. Fuckin' hell. I'm so tired.
+      if (resp.characters) {
         dispatch(
           quickSuccessAlert(
             "Picture updated! Do a hard refresh to see the changes."
