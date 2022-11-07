@@ -50,6 +50,7 @@ export default function Character() {
     characterState.currentCharacter,
     characterState.characters,
     userState.loggedIn,
+    searchParams,
   ]);
 
   if (loading) {
