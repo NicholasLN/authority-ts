@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { switchCharacter } from "../../redux/reducers/characterSlice";
 import CreateCharacterModal from "../modals/CreateCharacterModal";
 import SelectCharacterModal from "../modals/SelectCharacterModal";
@@ -22,7 +23,7 @@ export default function SidebarCharMenu() {
     dispatch(switchCharacter(char));
   };
 
-  useEffect(() => {}, [charState]);
+  useEffect(() => {}, [charState.currentCharacter]);
 
   return (
     <div className="flex flex-col justify-end w-full">
@@ -30,15 +31,25 @@ export default function SidebarCharMenu() {
         <h1 className="flex flex-grow justify-center">
           {/* Create a circular div that cuts off a rectangular picture, using as little code as possible */}
           <div className="flex flex-col justify-center w-12 h-12 bg-background-body rounded-full overflow-hidden">
-            <img
-              className="object-cover w-full h-full"
-              src={
-                charState.currentCharacter.picture
-                  ? charState.currentCharacter.picture
-                  : defaultPic
-              }
-              alt="Profile Picture"
-            />
+            {charState.currentCharacter ? (
+              <Link to={`/character?id=${charState.currentCharacter._id}`}>
+                <img
+                  className="object-cover w-full h-full"
+                  src={
+                    charState.currentCharacter.picture
+                      ? charState.currentCharacter.picture
+                      : defaultPic
+                  }
+                  alt="Profile Picture"
+                />
+              </Link>
+            ) : (
+              <img
+                className="object-cover w-full h-full"
+                src={defaultPic}
+                alt="Profile Picture"
+              />
+            )}
           </div>
         </h1>
         <div className="text-center text-background-body text-sm">
