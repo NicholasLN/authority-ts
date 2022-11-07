@@ -28,7 +28,7 @@ function uploadFile(file: any, fileName: string): Promise<any> {
     return s3.upload(params as any).promise();
   } else {
     logError(
-      "AWS S3 credentials not set. You may not be able to upload files."
+      "AWS S3 credentials not set. You will not be able to upload files."
     );
     return Promise.reject({ msg: "No AWS credentials" });
   }
