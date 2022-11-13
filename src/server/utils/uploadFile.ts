@@ -3,9 +3,9 @@ import { logError } from "./logging";
 
 function uploadFile(file: any, fileName: string): Promise<any> {
   if (
-    process.env.AWS_ACCESS_KEY_ID == "your aws access key" ||
-    process.env.AWS_SECRET_ACCESS_KEY == "your aws secret key" ||
-    process.env.AWS_BUCKET_NAME == "your aws bucket name"
+    process.env.AWS_ACCESS_KEY_ID != "your aws access key id" &&
+    process.env.AWS_SECRET_ACCESS_KEY != "your aws secret key" &&
+    process.env.AWS_S3_BUCKET_NAME != "your aws bucket name"
   ) {
     const s3 = new AWS.S3({
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
