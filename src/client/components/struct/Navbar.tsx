@@ -96,6 +96,13 @@ export default function Navbar() {
                 </div>
               </div>
             </div>
+            <div>
+              <Link to="/map">
+                <button className="px-2 py-1 rounded-md bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50">
+                  Map
+                </button>
+              </Link>
+            </div>
           </>
         )}
       </div>

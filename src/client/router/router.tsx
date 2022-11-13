@@ -10,6 +10,7 @@ import Login from "../components/pages/Login";
 import Register from "../components/pages/Register";
 import Profile from "../components/pages/Profile";
 import Character from "../components/pages/Character";
+import Map from "../components/map/Map";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="profile" element={<Profile />} />
+      <Route path="map" element={<Map />} />
       {/* Character Paths */}
       <Route path="character">
         <Route path="" element={<Character />} />

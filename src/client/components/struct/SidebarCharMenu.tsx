@@ -36,7 +36,7 @@ export default function SidebarCharMenu() {
                 <img
                   className="object-cover w-full h-full"
                   src={
-                    charState.currentCharacter.picture
+                    charState.currentCharacter.picture != "default.png"
                       ? charState.currentCharacter.picture
                       : defaultPic
                   }

@@ -8,6 +8,9 @@ import getPage from "../../../utils/getPage";
 import ChangePictureModal from "../../modals/CharacterProfile.tsx/ChangePictureModal";
 import Body from "../../struct/Body";
 
+const defaultPic = String(
+  require("../../../assets/img/placeholderpic.png").default
+);
 export default function Character() {
   const characterState = useSelector((state: RootState) => state.character);
   const userState = useSelector((state: RootState) => state.auth);
@@ -81,7 +84,9 @@ export default function Character() {
               ? "hover:ring-4 hover:ring-blue-500 hover:cursor-pointer delay-75"
               : ""
           }`}
-          src={charInfo.picture}
+          src={
+            charInfo.picture != "default.png" ? charInfo.picture : defaultPic
+          }
         />
         <h1 className="text-2xl ">{charInfo.name}</h1>
         <p className="text-lg">
