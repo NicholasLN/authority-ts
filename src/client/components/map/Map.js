@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax;
 import * as turf from "@turf/turf";
 import Body from "../struct/Body";
-import geojson from "./countries.geo.json";
+import axios from "axios";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicGhpbHNjb3R0NHZ0IiwiYSI6ImNrd3g3eGVwbDBhZm0ydnA4NTB2cTNxbGMifQ.qCKS8XHV2YJ8mD9-562L8g";
@@ -15,64 +15,60 @@ export default function Map() {
 
   // useEffect rerender map when useGlobe changes
   useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.remove();
-    }
-    mapRef.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      projection: useGlobe ? "globe" : "mercator",
-      style: {
-        version: 8,
-        sources: {},
-        layers: [
-          {
-            id: "background",
-            type: "background",
-            paint: { "background-color": "#3B727C" },
-          },
-        ],
-      },
-      center: [latLong[1], latLong[0]],
-      zoom: 1,
-    });
-
-    // geojson filter out cells with properties.type === "ocean"
-    var matching = turf.featureCollection(
-      geojson.features.filter((feature) => feature.properties.type !== "ocean")
-    );
-
-    mapRef.current.on("load", () => {
-      // set mapbox bounds to geojson bounds
-      mapRef.current.jumpTo({
-        center: turf.center(geojson).geometry.coordinates,
+    async function createMap() {
+      // get geoJSON data
+      if (mapRef.current) {
+        mapRef.current.remove();
+      }
+      var borders = { type: "FeatureCollection", features: [] };
+      var resp = await axios.get("/api/map/").catch((err) => {});
+      if (resp) {
+        borders.features = resp.data;
+      }
+      mapRef.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        projection: useGlobe ? "globe" : "mercator",
+        style: "mapbox://styles/philscott4vt/claa02c0j000v14mims8dditb",
+        center: [latLong[1], latLong[0]],
         zoom: 1,
       });
-      mapRef.current.fitBounds(turf.bbox(matching), {
-        padding: 20,
-      });
-      mapRef.current.addLayer({
-        id: "geojson",
-        type: "fill",
-        source: {
-          type: "geojson",
-          data: matching,
-        },
-        layout: {},
-        paint: {
-          "fill-color": "#82A775",
-          "fill-opacity": 0.8,
-        },
-      });
-    });
 
-    // Add zoom and rotation controls to the map.
-    mapRef.current.on("move", () => {
-      setLatLong(mapRef.current.getCenter().toArray().reverse());
-    });
+      mapRef.current.on("load", () => {
+        // set mapbox bounds to geojson bounds
+        mapRef.current.jumpTo({
+          center: turf.center(borders).geometry.coordinates,
+          zoom: 1,
+        });
+        mapRef.current.fitBounds(turf.bbox(borders), {
+          padding: 20,
+        });
+        mapRef.current.addLayer({
+          id: "geojson",
+          type: "fill",
+          source: {
+            type: "geojson",
+            data: borders,
+          },
+          layout: {},
+          paint: {
+            "fill-color": "#82A775",
+            "fill-opacity": 1,
+          },
+        });
+        mapRef.current.addControl(new mapboxgl.NavigationControl());
+        mapRef.current.addControl(new mapboxgl.FullscreenControl());
+        mapRef.current.addControl(new mapboxgl.ScaleControl());
+      });
 
-    mapRef.current.addControl(new mapboxgl.NavigationControl());
-    mapRef.current.addControl(new mapboxgl.FullscreenControl());
-    mapRef.current.addControl(new mapboxgl.ScaleControl());
+      // Add zoom and rotation controls to the map.
+      mapRef.current.on("move", () => {
+        setLatLong(mapRef.current.getCenter().toArray().reverse());
+      });
+    }
+    async function main() {
+      await createMap();
+    }
+    main();
   }, [useGlobe]);
 
   return (

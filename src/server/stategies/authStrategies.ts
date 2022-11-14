@@ -18,6 +18,7 @@ function notLoggedIn(req: Request, res: Response, next: NextFunction) {
 }
 
 function isAdmin(req: Request, res: Response, next: NextFunction) {
+  console.log(req.user);
   if (req.user.role === "admin") {
     next();
   } else {

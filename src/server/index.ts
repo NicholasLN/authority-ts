@@ -6,8 +6,12 @@ import multer from "multer";
 
 import jwtMiddleware from "./middlewares/verifyJwt";
 import initMongoDBConn from "./mongo/init";
+
 import userRouter from "./routes/user";
 import characterRouter from "./routes/character";
+import getMapRouter from "./routes/getMap";
+import scriptsRouter from "./routes/scripts";
+
 import initGlobalMethods from "./utils/globalMethods";
 import { logExpress } from "./utils/logging";
 import attachCharacter from "./middlewares/attachCharacter";
@@ -24,8 +28,10 @@ app.use(multer().single("file"));
 
 app.use(jwtMiddleware);
 app.use(attachCharacter);
+app.use("/api/map", getMapRouter);
 app.use("/api/user", userRouter);
 app.use("/api/character", characterRouter);
+app.use("/api/scripts", scriptsRouter);
 
 app.use(express.static(`${process.env.BUILD_OUTPUT}`));
 if (process.env.NODE_ENV!.toUpperCase() == "PRODUCTION") {
