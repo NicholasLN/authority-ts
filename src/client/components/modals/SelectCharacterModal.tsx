@@ -64,7 +64,7 @@ export default function SelectCharacterModal(props: SelectCharacterModalProps) {
               <div className="flex flex-col justify-center ml-2">
                 <div>{char.name}</div>
                 <div className="text-xs text-wet-asphalt italic">
-                  <span>{char.location}</span>
+                  <span>{char.region.name}</span>
                   <span className="mx-1">|</span>
                   <span>{char.gender}</span>
                   <span className="mx-1">|</span>
