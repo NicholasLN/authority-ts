@@ -11,20 +11,25 @@ import userRouter from "./routes/user";
 import characterRouter from "./routes/character";
 import getMapRouter from "./routes/getMap";
 import scriptsRouter from "./routes/scripts";
+import countryRouter from "./routes/country";
 
 import initGlobalMethods from "./utils/globalMethods";
 import { logExpress } from "./utils/logging";
 import attachCharacter from "./middlewares/attachCharacter";
 
+console.time("Server startup");
 // Initialize global methods
 initGlobalMethods();
 dotenv.config();
 
-const app = express();
+console.timeLog("Server startup", "Loaded .env");
 
+const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(multer().single("file"));
+
+console.timeLog("Server startup", "Loaded express");
 
 app.use(jwtMiddleware);
 app.use(attachCharacter);
@@ -32,6 +37,8 @@ app.use("/api/map", getMapRouter);
 app.use("/api/user", userRouter);
 app.use("/api/character", characterRouter);
 app.use("/api/scripts", scriptsRouter);
+app.use("/api/country", countryRouter);
+console.timeLog("Server startup", "Loaded routes");
 
 app.use(express.static(`${process.env.BUILD_OUTPUT}`));
 if (process.env.NODE_ENV!.toUpperCase() == "PRODUCTION") {
