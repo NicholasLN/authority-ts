@@ -18,11 +18,14 @@ function notLoggedIn(req: Request, res: Response, next: NextFunction) {
 }
 
 function isAdmin(req: Request, res: Response, next: NextFunction) {
-  console.log(req.user);
-  if (req.user.role === "admin") {
-    next();
+  if (process.env.ADMIN_MODE == "true") {
+    return next();
   } else {
-    res.status(401).send("You do not have administrator privileges.");
+    if (req.user.role === "admin") {
+      return next();
+    } else {
+      return res.status(401).send("You do not have administrator privileges.");
+    }
   }
 }
 
