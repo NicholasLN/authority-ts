@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
-import Character from "../mongo/models/Character";
+import Region from "../mongo/models/Region";
 import User from "../mongo/models/User";
+import Character from "../mongo/models/Character";
+require("../mongo/models/Region");
 import { logError } from "../utils/logging";
 import uploadFile from "../utils/uploadFile";
 
@@ -19,7 +21,17 @@ async function createCharacter(
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    const { name, gender, location, personalityStats } = req.body;
+    const { name, gender, region, personalityStats } = req.body;
+    const regionFound = await Region.findOne({ _id: region });
+    if (!regionFound) {
+      return res.status(404).json({
+        errors: [
+          {
+            msg: "Location not found",
+          },
+        ],
+      });
+    }
     const sumValues = (obj: object) =>
       Object.values(obj).reduce((a, b) => a + b, 0);
     if (sumValues(personalityStats) == 50) {
@@ -30,7 +42,7 @@ async function createCharacter(
           user: req.user.id,
           age: 18,
           gender,
-          location,
+          region: regionFound._id,
           personalityStats,
         });
         // Push the new character to the user's character array
@@ -59,12 +71,17 @@ async function getCharacter(req: Request, res: Response, next: NextFunction) {
       return res.status(422).json({ errors: errors.array() });
     }
 
-    const character = await Character.findById(req.params.id);
+    // Populate region
+    console.log(req.params.id);
+    const character = await Character.findById(req.params.id)
+      .populate("region")
+      .exec();
 
     if (character) {
       return res.status(200).json({ ...character.toJSON() });
     }
   } catch (e) {
+    console.log(e);
     return res.status(500).json({ errors: [{ msg: "Something went wrong" }] });
   }
 }
