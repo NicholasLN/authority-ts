@@ -7,36 +7,38 @@ interface Region extends mongoose.Document {
   name: string;
   borders: {
     type: string;
-    coordinates: number[][][];
+    coordinates: number[][][] | number[][][][];
   };
   returnAsGeoJSON: () => {
     type: string;
     geometry: {
       type: string;
-      coordinates: number[][][];
+      // support for multi-polygons
+      coordinates: number[][][] | number[][][][];
     };
   };
 }
 
-const regionModel = new mongoose.Schema<Region>({
+const regionSchema = new mongoose.Schema<Region>({
   name: { type: String, required: true },
   borders: {
     type: { type: String, default: "Polygon" },
-    coordinates: { type: [[[Number]]], required: true },
+    // support for multi-polygons as well
+    coordinates: { type: Array, required: true },
   },
 });
 
-regionModel.methods.returnAsGeoJSON = function () {
+regionSchema.methods.returnAsGeoJSON = function () {
   return {
     type: "Feature",
     properties: {
       name: this.name,
     },
     geometry: {
-      type: "Polygon",
+      type: this.borders.type || "Polygon",
       coordinates: this.borders.coordinates,
     },
   };
 };
 
-export default mongoose.model("Region", regionModel);
+export default mongoose.model<Region>("Region", regionSchema);
