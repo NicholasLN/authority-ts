@@ -35,7 +35,10 @@ interface Character {
   age: number;
   user: string;
   gender: string;
-  location: string;
+  region: {
+    name: string;
+    _id: string;
+  };
   personalityStats: PersonalityStats;
 }
 
