@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
   newCharacter,
   switchCharacter,
   updateCharacters,
 } from "../../redux/reducers/characterSlice";
+import getPage from "../../utils/getPage";
 import postPage from "../../utils/postPage";
 import Modal from "../struct/Modal";
 
@@ -14,10 +15,17 @@ type CreateCharacterModalProps = {
 };
 
 export default function CreateCharacterModal(props: CreateCharacterModalProps) {
+  const [countries, setCountries] = React.useState([] as any);
+  // TODO: define a type for this shit so that Region and Country are not any
+  const [selectedCountry, setSelectedCountry] = React.useState({} as any);
+
   const [form, setForm] = React.useState<Character>({
     name: "",
     gender: "Man",
-    location: "Fictionland",
+    region: {
+      name: "",
+      _id: "",
+    },
   } as Character);
   const [skills, setSkills] = React.useState<PersonalityStats>({
     rhetoric: 0,
@@ -26,14 +34,46 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
     dealmaking: 0,
     leadership: 0,
   });
-
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    async function getCountries() {
+      var resp = await getPage("/api/country/getAll", false, false);
+      setCountries(resp.data);
+      setSelectedCountry(resp.data[0]);
+      setForm({
+        ...form,
+        region: {
+          name: resp.data[0].region[0].name,
+          _id: resp.data[0].region[0]._id,
+        },
+      });
+    }
+    getCountries();
+  }, []);
+
+  const switchCountry = (e: any) => {
+    // Find country
+    var country = countries.find((c: any) => c._id === e.target.value);
+    console.log(country);
+    setSelectedCountry(country);
+    setForm({
+      ...form,
+      region: {
+        name: country.region[0].name,
+        _id: country.region[0]._id,
+      },
+    });
+  };
+  const switchRegion = (e: any) => {
+    setForm({ ...form, region: e.target.value });
+  };
 
   const createCharacter = async () => {
     var formObj = {
       name: form.name,
       gender: form.gender,
-      location: form.location,
+      region: form.region._id,
       personalityStats: skills,
     };
     var resp = await postPage("/api/character/create", formObj, true).catch(
@@ -59,7 +99,7 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
         - name
         - gender (man, woman, trans, nonbinary, other)
         - skill points (allocate 20 points to skills, [Rhetoric, Intelligence, Charisma, Deal Making, Leadership])
-        - location
+        - region
         - picture
     
         Use TailwindCSS for pretty styling. */}
@@ -83,7 +123,7 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
           </div>
           {/* Flex row with two columns of equal width */}
           <div className="flex flex-row w-full">
-            <div className="w-1/2 px-3">
+            <div className="w-1/3 px-3">
               <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                 Gender
               </label>
@@ -105,27 +145,62 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
                 </select>
               </div>
             </div>
-            <div className="w-1/2 px-3">
+            <div className="w-1/3 px-3">
+              {/* Country Selection. Selecting a country should change the shown regions */}
               <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                Location
+                Country
               </label>
               <div className="relative">
+                {/* No default value please. */}
                 <select
                   className="block appearance-none w-full bg-gray-800 border border-gray-800 text-white py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-gray-800 focus:border-gray-500"
                   id="grid-state"
-                  onChange={(e) =>
-                    setForm({ ...form, location: e.target.value })
-                  }
+                  defaultValue=""
+                  onChange={switchCountry}
                 >
-                  {["fictionland"].map((option, idx) => {
+                  {countries.map((country: any, idx: number) => {
                     return (
-                      <option key={idx} value={option}>
-                        {option.charAt(0).toUpperCase() + option.slice(1)}
+                      <option value={country._id} key={idx}>
+                        {country.name}
                       </option>
                     );
                   })}
                 </select>
+
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  ></svg>
+                </div>
               </div>
+            </div>
+            <div className="w-1/3 px-3">
+              {selectedCountry?.regions && (
+                <>
+                  <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                    Region
+                  </label>
+                  <div className="relative">
+                    <select
+                      className="block appearance-none w-full bg-gray-800 border border-gray-800 text-white py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-gray-800 focus:border-gray-500"
+                      id="grid-state"
+                      onChange={switchRegion}
+                    >
+                      {selectedCountry.regions.map(
+                        (region: any, idx: number) => {
+                          return (
+                            <option value={region._id} key={idx}>
+                              {region.name}
+                            </option>
+                          );
+                        }
+                      )}
+                    </select>
+                  </div>
+                </>
+              )}
             </div>
           </div>
           {/* Flex row with 5 columns of equal width. This will be used for allocating 20 points. */}
@@ -188,12 +263,14 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
               className={
                 Object.values(skills).reduce((a, b) => a + b, 0) === 50 &&
                 form.name !== ""
-                  ? "bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  : "bg-gray-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  ? "bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline "
+                  : "bg-gray-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-not-allowed"
               }
               type="button"
               onClick={() => {
-                createCharacter();
+                Object.values(skills).reduce((a, b) => a + b, 0) === 50 &&
+                  form.name !== "" &&
+                  createCharacter();
               }}
             >
               Create Character
