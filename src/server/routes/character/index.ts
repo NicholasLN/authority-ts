@@ -14,7 +14,7 @@ router.post(
   isLoggedIn,
   body("name", "Name is required").exists(),
   body("gender", "Gender is required").exists(),
-  body("location", "Location is required").exists(),
+  body("region", "Region is required").exists(),
   body("personalityStats", "Personality Stats are required")
     .exists()
     .isObject(),
