@@ -1,4 +1,5 @@
 import mongoose, { ObjectId } from "mongoose";
+import Region from "./Region";
 
 interface Character extends mongoose.Document {
   name: string;
@@ -6,7 +7,7 @@ interface Character extends mongoose.Document {
   picture: string;
   age: number;
   gender: string;
-  location: string;
+  region: ObjectId;
   personalityStats: {
     rhetoric: number;
     intelligence: number;
@@ -41,10 +42,10 @@ const characterSchema = new mongoose.Schema<Character>({
     required: true,
     unique: false,
   },
-  location: {
-    type: String,
+  region: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Region",
     required: true,
-    unique: false,
   },
   personalityStats: {
     rhetoric: {
