@@ -108,9 +108,9 @@ router.get("/createWorld", isAdmin, async (req, res) => {
       countryFound = await countryFound.populate(
         "legislativeBranch.legislativeBodies"
       );
-      res.send(countryFound);
     }
   });
+  res.status(200).json({ message: "World created" });
 });
 
 export default router;
