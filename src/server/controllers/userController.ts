@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 
 import User from "../mongo/models/User";
+import Region from "../mongo/models/Region";
 
 // User Controller with following methods: Register, Login
 // Path: src\server\controllers\userController.ts
@@ -66,9 +67,15 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
       return res.status(422).json({ errors: errors.array() });
     }
     // Check if user exists
-    const user = await User.findOne({ username: req.body.username }).populate(
-      "characters"
-    );
+    const user = await User.findOne({ username: req.body.username }).populate({
+      path: "characters",
+      populate: {
+        path: "region",
+        model: "Region",
+        select: "-borders",
+      },
+      strictPopulate: false,
+    });
     if (user) {
       // If user exists, check if the password is correct
       if (user.verifyPassword(req.body.password)) {
@@ -101,11 +108,15 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
   }
 }
 async function profile(req: Request, res: Response, next: NextFunction) {
-  // find user and populate characters, depopulate password
-  var user = await User.findById(req.user.id)
-    .populate("characters")
-    .select("-password");
-
+  // find user and populate characters, populate regions in characters and depopulate password
+  const user = await User.findById(req.user.id).populate({
+    path: "characters",
+    populate: {
+      path: "region",
+      model: "Region",
+      select: "-borders",
+    },
+  });
   if (user) {
     res.status(200).send(user);
   }
