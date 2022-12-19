@@ -1,108 +1,62 @@
 import React, { useEffect, useRef } from "react";
-import mapboxgl from "mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax;
-import * as turf from "@turf/turf";
+import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
+import { useNavigate } from "react-router-dom";
+import getPage from "../../utils/getPage";
 import Body from "../struct/Body";
-import axios from "axios";
-
-mapboxgl.accessToken =
-  "pk.eyJ1IjoicGhpbHNjb3R0NHZ0IiwiYSI6ImNrd3g3eGVwbDBhZm0ydnA4NTB2cTNxbGMifQ.qCKS8XHV2YJ8mD9-562L8g";
+import Geoman from "./Geoman";
 
 export default function Map() {
-  const [useGlobe, setUseGlobe] = React.useState(false);
-  const [latLong, setLatLong] = React.useState([0, 0]);
-  const mapContainer = useRef(null);
-  const mapRef = useRef(null);
+  const [geoJSON, setGeoJSON] = React.useState(null);
+  const position = [0, 0];
+  const zoomLv = 2;
 
-  // useEffect rerender map when useGlobe changes
+  const navigate = useNavigate();
+
   useEffect(() => {
-    async function createMap() {
-      // get geoJSON data
-      if (mapRef.current) {
-        mapRef.current.remove();
-      }
-      var borders = { type: "FeatureCollection", features: [] };
-      var resp = await axios.get("/api/map/").catch((err) => {});
-      if (resp) {
-        borders.features = resp.data;
-      }
-      mapRef.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        projection: useGlobe ? "globe" : "mercator",
-        style: "mapbox://styles/philscott4vt/claa02c0j000v14mims8dditb",
-        center: [latLong[1], latLong[0]],
-        zoom: 1,
-      });
-
-      mapRef.current.on("load", () => {
-        // set mapbox bounds to geojson bounds
-        mapRef.current.jumpTo({
-          center: turf.center(borders).geometry.coordinates,
-          zoom: 1,
-        });
-        mapRef.current.fitBounds(turf.bbox(borders), {
-          padding: 20,
-        });
-        mapRef.current.addLayer({
-          id: "geojson",
-          type: "fill",
-          source: {
-            type: "geojson",
-            data: borders,
-          },
-          layout: {},
-          paint: {
-            "fill-color": "#82A775",
-            "fill-opacity": 1,
-          },
-        });
-        mapRef.current.addControl(new mapboxgl.NavigationControl());
-        mapRef.current.addControl(new mapboxgl.FullscreenControl());
-        mapRef.current.addControl(new mapboxgl.ScaleControl());
-      });
-
-      // Add zoom and rotation controls to the map.
-      mapRef.current.on("move", () => {
-        setLatLong(mapRef.current.getCenter().toArray().reverse());
-      });
-    }
-    async function main() {
-      await createMap();
-    }
-    main();
-  }, [useGlobe]);
+    getPage("/api/map").then((resp) => {
+      setGeoJSON(resp.data);
+    });
+  }, []);
 
   return (
     <Body>
-      {/* Buttons on top for mapmodes */}
-      <div className="mapmode">
-        {/* tailwind */}
-        <button
-          className={`${
-            useGlobe ? "bg-gray-800" : "bg-gray-400"
-          } px-4 py-2 rounded-md`}
-          onClick={() => setUseGlobe(true)}
-        >
-          Globe
-        </button>
-        <button
-          className={`${
-            !useGlobe ? "bg-gray-800" : "bg-gray-400"
-          } px-4 py-2 rounded-md`}
-          onClick={() => setUseGlobe(false)}
-        >
-          Mercator
-        </button>
-      </div>
-
-      <div className="w-full h-full flex justify-center items-center">
-        <div
-          ref={mapContainer}
-          style={{ width: "80%", height: "80%" }}
-          className={`${
-            useGlobe && "bg-black"
-          } p-3 border-4 border-solid border-black`}
+      <MapContainer
+        center={position}
+        zoom={zoomLv}
+        scrollWheelZoom={true}
+        className="w-full h-full"
+      >
+        <TileLayer
+          className="w-full h-full"
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}"
+          attribution='&copy; OpenStreetMap France | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          maxZoom={20}
         />
-      </div>
+        {/* Render geoJSON features. We want a tooltip with the name of the feature */}
+        {geoJSON && (
+          <GeoJSON
+            data={geoJSON}
+            style={() => ({
+              color: "black",
+              weight: 1,
+              fillColor: "gray",
+              fillOpacity: 0.8,
+            })}
+            onEachFeature={(feature, layer) => {
+              // onclick
+              layer.on("click", (e) => {
+                // Clicking it on the future will zoom in on the feature and show it's subdivisions (if any)
+                // navigate(`/map/${feature.properties.id}`);
+                navigate(`/country?id=${feature.properties.country}`);
+              });
+              layer.setStyle({
+                fillColor: feature.properties.color,
+              });
+            }}
+          />
+        )}
+        <Geoman />
+      </MapContainer>
     </Body>
   );
 }
