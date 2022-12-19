@@ -39,7 +39,24 @@ interface Character {
     name: string;
     _id: string;
   };
+  country: Country;
   personalityStats: PersonalityStats;
+}
+
+interface Country {
+  _id: string;
+  legislativeBranch: string;
+  name: string;
+  regions: Array<string> | Array<Region>;
+  color: string;
+}
+
+interface Region {
+  name: string;
+  borders: {
+    type: string;
+    coordinates: number[][][] | number[][][][];
+  };
 }
 
 interface PersonalityStats {
