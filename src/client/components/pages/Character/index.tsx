@@ -7,11 +7,12 @@ import { quickErrorAlert } from "../../../redux/reducers/alertSlice";
 import getPage from "../../../utils/getPage";
 import ChangePictureModal from "../../modals/CharacterProfile.tsx/ChangePictureModal";
 import Body from "../../struct/Body";
+import NotFound from "../../struct/NotFound";
 
 const defaultPic = String(
   require("../../../assets/img/placeholderpic.png").default
 );
-export default function Character() {
+function Character() {
   const characterState = useSelector((state: RootState) => state.character);
   const userState = useSelector((state: RootState) => state.auth);
 
@@ -22,6 +23,7 @@ export default function Character() {
   const [showChangePictureModal, setShowChangePictureModal] =
     React.useState(false);
   const [charInfo, setCharInfo] = React.useState<Character>({} as Character);
+  const [notFound, setNotFound] = React.useState(false);
   const [loading, setLoading] = React.useState<boolean>(true);
 
   useEffect(() => {
@@ -36,25 +38,22 @@ export default function Character() {
           nav("/");
         }
       }
-      await getPage(`/api/character/read/${searchId}`)
-        .then((res) => {
-          setCharInfo(res.data);
-          setLoading(false);
-        })
-        .catch((err) => {
-          nav("/");
-          dispatch(
-            quickErrorAlert("Failed to load character. They may not exist.")
-          );
-        });
+      var response = await getPage(`/api/character/read/${searchId}`);
+      if (response.status === 200 || response.status === 304) {
+        setCharInfo(response.data);
+        setLoading(false);
+      } else {
+        setNotFound(true);
+        setLoading(false);
+      }
     }
     getCharacter();
-  }, [
-    characterState.currentCharacter,
-    characterState.characters,
-    userState.loggedIn,
-    searchParams,
-  ]);
+
+    return () => {
+      setCharInfo({} as Character);
+      setNotFound(false);
+    };
+  }, [characterState.currentCharacter, searchParams, nav, dispatch]);
 
   if (loading) {
     return (
@@ -64,39 +63,50 @@ export default function Character() {
     );
   }
 
-  return (
-    <Body>
-      {/* Create a user profile for characters */}
-      {/* It shouldn't be centered, and should instead be left-right, with a circle of the characters picture in the top left. */}
-      <ChangePictureModal
-        shown={showChangePictureModal}
-        onClose={() => setShowChangePictureModal(false)}
-      />
-      <div className="flex flex-col items-center w-full h-full p-3 bg-slate-50 shadow-xl">
-        <img
-          onClick={() => {
-            if (charInfo._id === characterState.currentCharacter._id) {
-              setShowChangePictureModal(true);
-            }
-          }}
-          className={`w-36 h-36 rounded-full shadow-lg object-cover ring-2 ring-gray-300 p-1 ${
-            characterState.currentCharacter._id == charInfo._id
-              ? "hover:ring-4 hover:ring-blue-500 hover:cursor-pointer delay-75"
-              : ""
-          }`}
-          src={
-            charInfo.picture != "default.png" ? charInfo.picture : defaultPic
-          }
+  if (!notFound) {
+    return (
+      <Body>
+        {/* Create a user profile for characters */}
+        {/* It shouldn't be centered, and should instead be left-right, with a circle of the characters picture in the top left. */}
+        <ChangePictureModal
+          shown={showChangePictureModal}
+          onClose={() => setShowChangePictureModal(false)}
         />
-        <h1 className="text-2xl ">{charInfo.name}</h1>
-        <p className="text-lg">
-          {charInfo._id === characterState.currentCharacter._id ? (
-            <p>This is you.</p>
-          ) : (
-            <p>This isn't you</p>
-          )}{" "}
-        </p>
-      </div>
-    </Body>
-  );
+        <div className="flex flex-col items-center w-full h-full p-3 bg-slate-50 shadow-xl">
+          <img
+            onClick={() => {
+              if (charInfo._id === characterState.currentCharacter._id) {
+                setShowChangePictureModal(true);
+              }
+            }}
+            className={`w-36 h-36 rounded-full shadow-lg object-cover ring-2 ring-gray-300 p-1 ${
+              characterState.currentCharacter._id == charInfo._id
+                ? "hover:ring-4 hover:ring-blue-500 hover:cursor-pointer delay-75"
+                : ""
+            }`}
+            src={
+              charInfo.picture != "default.png" ? charInfo.picture : defaultPic
+            }
+          />
+          <h1 className="text-2xl ">{charInfo.name}</h1>
+          <div className="text-lg">
+            {charInfo._id === characterState.currentCharacter._id ? (
+              <p>This is you.</p>
+            ) : (
+              <p>This isn't you</p>
+            )}{" "}
+          </div>
+        </div>
+      </Body>
+    );
+  } else {
+    return (
+      <NotFound
+        errorType="Character not found"
+        errorMessage="The character you are looking for does not exist."
+        extraMessage="If you believe this is an error, please contact the site administrator."
+      />
+    );
+  }
 }
+export default React.memo(Character);
