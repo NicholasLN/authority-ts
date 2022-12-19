@@ -31,17 +31,20 @@ async function grabCharactersById(
     },
   });
   if (charactersDatabase) {
-    var characters = charactersDatabase.toObject();
+    var user = charactersDatabase.toObject();
     if (includeCountry) {
-      characters.forEach(async (character: any) => {
-        // Find a country that holds the characters region. Country model has an array of region object ids.
-        const country = await Country.findOne({ regions: character.region });
-        if (country) {
-          character.country = country.toObject();
-        }
-      });
+      if (!Array.isArray(user.characters)) return [];
+      await Promise.all(
+        user.characters.map(async (character: any) => {
+          // Find a country that holds the characters region. Country model has an array of region object ids.
+          const country = await Country.findOne({ regions: character.region });
+          if (country) {
+            character.country = country.toObject();
+          }
+        })
+      );
     }
-    return characters as any as Character[];
+    return user.characters as any as Character[];
   }
   return [];
 }

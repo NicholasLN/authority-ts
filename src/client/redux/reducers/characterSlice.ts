@@ -43,7 +43,6 @@ export const charSlice = createSlice({
       var char = state.characters.find(
         (char: Character) => char._id === action.payload._id
       );
-      console.log();
       if (char) {
         state.currentCharacter = char;
       } else {

@@ -24,7 +24,7 @@ export default function selectable(props: Props) {
             contextId: wrapperRef.current.attributes["data-contextid"].value,
           })
         );
-        console.log("clicked inside");
+        //console.log("clicked inside");
       }
     }
     document.addEventListener("mousedown", handleClickInside);

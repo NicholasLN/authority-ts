@@ -47,12 +47,6 @@ async function grabUserById(
           // Find a country that holds the characters region. Country model has an array of region object ids.
           const country = await Country.findOne({ regions: character.region });
           if (country) {
-            console.log(
-              "Found country",
-              country.name,
-              "for character",
-              character.name
-            );
             character.country = country.toObject();
           }
         })

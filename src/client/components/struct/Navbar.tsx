@@ -18,10 +18,6 @@ export default function Navbar() {
   const charState = useSelector((state: RootState) => state.character);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log(charState, userState);
-  });
-
   const logoutFunc = function (): any {
     dispatch(logout());
     // Make sure to reset the character state
