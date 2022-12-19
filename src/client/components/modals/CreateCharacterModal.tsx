@@ -44,13 +44,15 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
       setForm({
         ...form,
         region: {
-          name: resp.data[0].region[0].name,
-          _id: resp.data[0].region[0]._id,
+          name: resp.data[0].regions[0].name,
+          _id: resp.data[0].regions[0]._id,
         },
       });
     }
-    getCountries();
-  }, []);
+    if (props.shown) {
+      getCountries();
+    }
+  }, [props.shown]);
 
   const switchCountry = (e: any) => {
     // Find country
@@ -60,8 +62,8 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
     setForm({
       ...form,
       region: {
-        name: country.region[0].name,
-        _id: country.region[0]._id,
+        name: country.regions[0].name,
+        _id: country.regions[0]._id,
       },
     });
   };
@@ -82,7 +84,12 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
       }
     );
     if (resp) {
-      dispatch(newCharacter(resp.data.character));
+      dispatch(
+        newCharacter({
+          newCharacter: resp.data.character,
+          characters: resp.data.characters,
+        })
+      );
       props.onClose();
     }
   };
