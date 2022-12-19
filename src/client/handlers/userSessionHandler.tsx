@@ -31,25 +31,18 @@ function userSessionHandler(props: UserSessionHandlerProps) {
       if (isFocused) {
         // If the user has an access token, we'll check/update the session (if it's valid and not expired/malformed)
         if (access_token != "null") {
-          try {
-            var resp = await getPage("/api/user/profile", true, true);
+          var response = await getPage("/api/user/profile", true, true);
+          if (response.status === 200 || response.status === 304) {
             // If the response is 200, we'll update the state with the new session
-            if (resp.data) {
-              // Restore the session if the state is empty (i.e. the user has refreshed the page or revisited the site after a while)
-              if (!userState.loggedIn) {
-                dispatch(login(resp.data));
-              }
-              // Otherwise, if they already have an active state, we'll update it to reflect the users new information
-              dispatch(updateState(resp.data));
-              // Update characters as well
-              dispatch(updateCharacters(resp.data.characters));
+            if (!userState.loggedIn) {
+              dispatch(login(response.data));
             }
-          } catch (e: any) {
-            // If there's any errors at all, we'll log the user out and prompt them to log back in.
-            // Possible errors include:
-            // 1. The access token is expired, malformed, or invalid
-            // 2. The user has been deleted
-            // 3. And other errors that may occur
+            // Otherwise, if they already have an active state, we'll update it to reflect the users new information
+            dispatch(updateState(response.data));
+            // Update characters as well
+            dispatch(updateCharacters(response.data.characters));
+          } else {
+            // If the response is not 200, we'll log the user out
             dispatch(logout());
             dispatch(characterLogout());
           }

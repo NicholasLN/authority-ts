@@ -1,11 +1,17 @@
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
+type GetPageResponse = {
+  status: number;
+  type: "success" | "error";
+  data: any;
+};
+
 export default async function getPage(
   url: string,
   accessToken: boolean = false,
   attachCharacter: boolean = false
-): Promise<AxiosResponse> {
+): Promise<GetPageResponse> {
   var cfg: any = {};
   if (accessToken) {
     cfg = {
@@ -15,5 +21,14 @@ export default async function getPage(
   if (attachCharacter) {
     cfg.headers["current_character"] = Cookies.get("current_character");
   }
-  return await axios.get(url, cfg);
+  try {
+    var response = await axios.get(url, cfg);
+    return { status: response.status, type: "success", data: response.data };
+  } catch (e: any) {
+    return {
+      status: e.response.status,
+      type: "error",
+      data: e.response.data,
+    };
+  }
 }
