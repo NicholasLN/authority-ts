@@ -26,7 +26,10 @@ export const charSlice = createSlice({
           (char: any) => char._id === cookieChar
         );
         if (char) {
-          state.currentCharacter = char;
+          // Compare state to found char, if they're not the same, update state.
+          if (JSON.stringify(state.currentCharacter) !== JSON.stringify(char)) {
+            state.currentCharacter = char;
+          }
         } else {
           Cookies.set("current_character", "none");
         }
@@ -53,10 +56,20 @@ export const charSlice = createSlice({
       state.currentCharacter = false;
     },
     newCharacter: (state, action) => {
-      var char: Character = action.payload;
-      state.characters.push(char);
-      state.currentCharacter = char;
-      Cookies.set("current_character", action.payload._id);
+      var characters: Character[] = action.payload.characters;
+      var newCharacter: string = action.payload.newCharacter;
+      state.characters = characters;
+
+      // Find the character in the list of characters and set it as the current character.
+      var char = state.characters.find(
+        (char: Character) => char._id === newCharacter
+      );
+      if (char) {
+        state.currentCharacter = char;
+        Cookies.set("current_character", newCharacter);
+      } else {
+        state.currentCharacter = false;
+      }
     },
   },
 });
