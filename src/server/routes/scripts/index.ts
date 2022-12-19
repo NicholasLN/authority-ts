@@ -20,6 +20,7 @@ type CountryFile = {
     legislativeBodies?: [
       {
         name: string;
+        seats: [any];
       }
     ];
   };
@@ -27,6 +28,12 @@ type CountryFile = {
     {
       name: string;
       type: string;
+      seatsElected: [
+        {
+          id: string;
+          proportional: number;
+        }
+      ];
       coordinates: number[][][];
     }
   ];

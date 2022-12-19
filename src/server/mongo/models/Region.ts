@@ -11,6 +11,7 @@ interface Region extends mongoose.Document {
   };
   returnAsGeoJSON: () => {
     type: string;
+    properties?: any;
     geometry: {
       type: string;
       // support for multi-polygons

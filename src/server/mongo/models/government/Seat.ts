@@ -8,7 +8,12 @@ import mongoose, { ObjectId } from "mongoose";
  */
 interface Seat extends mongoose.Document {
   name: string;
-  votingPower: number;
+  // Can be any object, but must include a votingPower property, minSeatsCanBeHeld, and maxSeatsCanBeHeld
+  seatProperties: {
+    votingPower: number;
+    minSeatsCanBeHeld: number;
+    maxSeatsCanBeHeld: number;
+  };
   // If applicable, it can vote in multiple legislative bodies
   legislativeBody: Array<ObjectId>;
 }
@@ -18,8 +23,8 @@ const seatModel = new mongoose.Schema<Seat>({
     type: String,
     required: true,
   },
-  votingPower: {
-    type: Number,
+  seatProperties: {
+    type: Object,
     required: true,
   },
   legislativeBody: [
