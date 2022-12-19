@@ -7,9 +7,16 @@ require("../mongo/models/Region");
 import { logError } from "../utils/logging";
 import uploadFile from "../utils/uploadFile";
 
+import { grabCharacterById, grabCharactersById } from "../utils/character";
+import { grabUserById } from "../utils/user";
+
 // Character Controller with following methods: Create, Read, Update, Delete
 // Path: src\server\controllers\characterController.ts
 
+/**
+ * Create a new character
+ * FIELDS REQUIRED: name, gender, region, personality stats (all 5 must add up to 50)
+ */
 async function createCharacter(
   req: Request,
   res: Response,
@@ -48,11 +55,20 @@ async function createCharacter(
         // Push the new character to the user's character array
         await newChar.save();
         user.characters.push(newChar._id);
+        await user.populate("characters");
         await user.save();
 
-        return res
-          .status(200)
-          .json({ characters: user.characters, character: newChar.toJSON() });
+        const newCharacters = await grabCharactersById(user._id);
+        if (newCharacters) {
+          return res.status(200).json({
+            characters: newCharacters,
+            character: newChar._id,
+          });
+        } else {
+          return res.status(500).json({
+            errors: [{ msg: "Something went wrong" }],
+          });
+        }
       }
     } else {
       return res
@@ -70,24 +86,20 @@ async function getCharacter(req: Request, res: Response, next: NextFunction) {
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-
-    // Populate region
-    console.log(req.params.id);
-    const character = await Character.findById(req.params.id)
-      .populate("region")
-      .exec();
-
+    const character = await grabCharacterById(
+      req.params.id,
+      { includeRegion: true, includeBorders: false },
+      true
+    );
     if (character) {
-      return res.status(200).json({ ...character.toJSON() });
+      return res.status(200).json(character);
     }
   } catch (e) {
-    console.log(e);
     return res.status(500).json({ errors: [{ msg: "Something went wrong" }] });
   }
 }
 
 async function updatePicture(req: Request, res: Response, next: NextFunction) {
-  console.log(req.file, req.files, req.body);
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -112,15 +124,16 @@ async function updatePicture(req: Request, res: Response, next: NextFunction) {
             if (character) {
               character.picture = newFile.Location;
               await character.save();
-              var user = await User.findById(req.user.id)
-                .populate("characters")
-                .select("-password");
+              var user = await grabUserById(req.user.id, false);
               if (user) {
                 return res.status(200).json(user);
               }
             }
           }
-          return res.status(200).json({ file: newFile });
+        } else {
+          return res.status(422).json({
+            errors: [{ msg: "File type not supported" }],
+          });
         }
         return res.status(422).json({
           errors: [{ msg: "File type must be jpeg, png, jpg, or gif" }],

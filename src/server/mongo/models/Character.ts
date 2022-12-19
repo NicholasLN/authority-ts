@@ -8,6 +8,7 @@ interface Character extends mongoose.Document {
   age: number;
   gender: string;
   region: ObjectId;
+  country?: Country | string | object;
   personalityStats: {
     rhetoric: number;
     intelligence: number;

@@ -3,6 +3,7 @@ import { validationResult } from "express-validator";
 
 import User from "../mongo/models/User";
 import Region from "../mongo/models/Region";
+import { grabUserById } from "../utils/user";
 
 // User Controller with following methods: Register, Login
 // Path: src\server\controllers\userController.ts
@@ -90,6 +91,15 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
 
         var jwtToken = generateJWT(jwtObj, remember);
         // Send the JWT token back to the user as well as the user object;
+        var updatedUser = (await grabUserById(user._id, false, {
+          grabCharacters: true,
+          grabRegions: {
+            grabRegion: true,
+            grabBorders: false,
+          },
+          grabCountries: true,
+        })) as any;
+        // TODO: Fix this any, IDK why it's not working with the return.
         return res.status(200).json({
           message: "User logged in",
           token: jwtToken,
@@ -97,7 +107,7 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
             username: user.username,
             email: user.email,
             role: user.role,
-            characters: user.characters,
+            characters: updatedUser?.characters,
           },
         });
       }
@@ -109,17 +119,18 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
 }
 async function profile(req: Request, res: Response, next: NextFunction) {
   // find user and populate characters, populate regions in characters and depopulate password
-  const user = await User.findById(req.user.id).populate({
-    path: "characters",
-    populate: {
-      path: "region",
-      model: "Region",
-      select: "-borders",
+  const user = await grabUserById(req.user.id, false, {
+    grabCharacters: true,
+    grabRegions: {
+      grabRegion: true,
+      grabBorders: false,
     },
+    grabCountries: true,
   });
   if (user) {
-    res.status(200).send(user);
+    return res.status(200).json(user);
   }
+  return res.status(404).json({ errors: [{ msg: "User not found" }] });
 }
 
 export default {
