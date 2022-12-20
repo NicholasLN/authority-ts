@@ -68,23 +68,53 @@ export default function ChangePictureModal(props: Props) {
           Image must be less than 2MB, and must be a PNG, JPG / JPEG, GIF
         </p>
         <div className="flex flex-row items-center">
-          <form encType="multipart/form-data">
-            <input
-              type="file"
-              name="file"
-              id="file"
-              className="inputfile"
-              onChange={onImageChange}
-            />
-            <label htmlFor="file">Choose a file</label>
-
-            <button
-              className="bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="button"
-              onClick={uploadCharacterPicture}
+          <form encType="multipart/form-data" className="flex flex-col">
+            {/* Create a form. Make sure the image upload button itself is hidden, because we can't style it
+                Just create a label with the same ID as the input, and style that instead. When a user uploads a file, the label will change to the file name 
+            */}
+            <label
+              htmlFor="file-upload"
+              className="bg-gray-800 text-white py-2 px-4 rounded inline-flex items-center"
             >
-              Upload
-            </button>
+              <svg
+                className="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
+              </svg>
+              <div className="flex flex-col">
+                <span>Choose a file</span>
+                {selectedPicture && (
+                  // Put it on the next line if there's a file selected
+                  <span className="ml-2 text-xs">{selectedPicture.name}</span>
+                )}
+              </div>
+            </label>
+            <div className="m-2">
+              <input
+                id="file-upload"
+                type="file"
+                className="hidden"
+                onChange={onImageChange}
+              />
+              {selectedPicture && (
+                <button
+                  type="button"
+                  className="bg-gray-800 text-white py-2 px-4 rounded inline-flex items-center"
+                  onClick={uploadCharacterPicture}
+                >
+                  <span>Upload</span>
+                </button>
+              )}
+            </div>
           </form>
         </div>
       </div>

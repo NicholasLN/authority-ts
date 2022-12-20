@@ -97,7 +97,7 @@ export default function Navbar() {
               </div>
             </div>
             {/* Country dropdown */}
-            {charState.currentCharacter && (
+            {charState.currentCharacter.country && (
               <div className="relative ml-2">
                 <button
                   onClick={() =>
@@ -133,10 +133,10 @@ export default function Navbar() {
                 >
                   <div className="px-1 py-1 ">
                     <Link
-                      to={`/country/${charState.currentCharacter._id}`}
+                      to={`/country/?id=${charState.currentCharacter.country._id}`}
                       className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600"
                     >
-                      {charState.currentCharacter.name}
+                      {charState.currentCharacter.country.name}
                     </Link>
                   </div>
                 </div>

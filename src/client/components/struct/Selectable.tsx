@@ -6,6 +6,7 @@ type Props = {
   contextType: "Character" | "Party" | "Region" | "Other";
   contextId?: string;
   children: JSX.Element | JSX.Element[];
+  showHighlight?: boolean;
 };
 
 export default function selectable(props: Props) {
@@ -39,9 +40,11 @@ export default function selectable(props: Props) {
       id={props.contextType}
       data-contextid={props.contextId}
       className={
-        focused
-          ? "bg-blue-500 rounded-md cursor-default select-none p-0.5"
-          : "hover:bg-blue-300 rounded-md cursor-help select-none p-0.5"
+        props.showHighlight
+          ? focused
+            ? "bg-blue-500 rounded-md cursor-default select-none p-0.5"
+            : "hover:bg-blue-300 rounded-md cursor-help select-none p-0.5"
+          : ""
       }
     >
       {props.children}
