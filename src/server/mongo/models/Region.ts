@@ -34,6 +34,7 @@ regionSchema.methods.returnAsGeoJSON = function () {
     type: "Feature",
     properties: {
       name: this.name,
+      id: this._id,
     },
     geometry: {
       type: this.borders.type || "Polygon",

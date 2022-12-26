@@ -16,7 +16,7 @@ type grabCharactersOptions = {
  * @param userId ID of the user (ObjectID)
  * @param password Whether or not to include the password (default: false)
  * @param grabCharacters Whether or not to include the characters, their regions, and their countries (default: true)
- * @returns A user object
+ * @returns
  */
 async function grabUserById(
   userId: string,
@@ -30,21 +30,24 @@ async function grabUserById(
     grabCountries: true,
   }
 ): Promise<typeof User> {
-  var userDatabase = await User.findById(userId).populate({
-    path: grabCharacters.grabCharacters ? "characters" : "",
-    populate: {
-      path: grabCharacters.grabRegions.grabRegion ? "region" : "",
-      select: grabCharacters.grabRegions.grabBorders ? "" : "-borders",
-      strictPopulate: false,
-    },
-    select: password ? "" : "-password",
-  });
+  const query = User.findById(userId);
+  if (grabCharacters.grabCharacters) {
+    query.populate({
+      path: "characters",
+      populate: {
+        path: grabCharacters.grabRegions.grabRegion ? "region" : "",
+        select: grabCharacters.grabRegions.grabBorders ? "" : "-borders",
+        strictPopulate: false,
+      },
+      select: password ? "" : "-password",
+    });
+  }
+  const userDatabase = await query.exec();
   if (userDatabase) {
-    var user = userDatabase.toObject();
+    const user = userDatabase.toObject();
     if (grabCharacters.grabCharacters && grabCharacters.grabCountries) {
       await Promise.all(
         user.characters.map(async (character: any) => {
-          // Find a country that holds the characters region. Country model has an array of region object ids.
           const country = await Country.findOne({ regions: character.region });
           if (country) {
             character.country = country.toObject();

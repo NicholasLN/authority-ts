@@ -10,6 +10,7 @@ export const authSlice = createSlice({
   },
   reducers: {
     updateState: (state, action) => {
+      // Compare state to found char, if they're not the same, update state.
       state.user = action.payload;
     },
     login: (state, action) => {

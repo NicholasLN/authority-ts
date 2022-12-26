@@ -18,12 +18,8 @@ const Geoman = () => {
     leafletContainer.on("pm:create", (e) => {
       if (e.layer && e.layer.pm) {
         const shape = e;
-        console.log(e);
-
         // enable editing of circle
         shape.layer.pm.enable();
-
-        console.log(`object created: ${shape.layer.pm.getShape()}`);
         // console.log(leafletContainer.pm.getGeomanLayers(true).toGeoJSON());
         leafletContainer.pm
           .getGeomanLayers(true)
@@ -40,7 +36,6 @@ const Geoman = () => {
     });
 
     leafletContainer.on("pm:remove", (e) => {
-      console.log("object removed");
       // console.log(leafletContainer.pm.getGeomanLayers(true).toGeoJSON());
     });
 

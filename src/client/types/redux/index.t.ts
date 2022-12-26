@@ -53,7 +53,7 @@ interface Country {
 
 interface Region {
   name: string;
-  borders: {
+  borders?: {
     type: string;
     coordinates: number[][][] | number[][][][];
   };

@@ -57,7 +57,6 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
   const switchCountry = (e: any) => {
     // Find country
     var country = countries.find((c: any) => c._id === e.target.value);
-    console.log(country);
     setSelectedCountry(country);
     setForm({
       ...form,
@@ -80,7 +79,7 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
     };
     var resp = await postPage("/api/character/create", formObj, true).catch(
       (err) => {
-        console.log(err);
+        //console.log(err);
       }
     );
     if (resp) {
