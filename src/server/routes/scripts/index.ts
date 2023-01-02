@@ -108,6 +108,7 @@ async function createLegislativeBranch(legislativeBranch: any): Promise<any> {
 async function createRegions(regions: any, seats: any) {
   var regionsReturn = [] as any;
   regions.map(async (region: any) => {
+    console.log(region);
     var seatsInRegion = seats.filter((seat: any) => {
       return region.seatsElected.includes(seat.seatId);
     });
@@ -118,7 +119,10 @@ async function createRegions(regions: any, seats: any) {
       name: region.name,
       type: region.type,
       seatsElected: seatsInRegionIds,
-      coordinates: region.coordinates,
+      borders: {
+        type: "Polygon",
+        coordinates: region.coordinates,
+      },
     });
     regionsReturn.push(newRegion);
   });
@@ -139,7 +143,6 @@ router.get("/createWorld", isAdmin, async (req, res) => {
         );
         var newCountry = await createCountry(legislativeBranch, country);
         var regions = await createRegions(country.regions, seats);
-
         for (const region of regions) {
           newCountry.regions.push(region._id);
           region.save();
