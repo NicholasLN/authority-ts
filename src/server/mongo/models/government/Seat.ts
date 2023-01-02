@@ -8,6 +8,7 @@ import mongoose, { ObjectId } from "mongoose";
  */
 interface Seat extends mongoose.Document {
   name: string;
+  seatId: string;
   // Can be any object, but must include a votingPower property, minSeatsCanBeHeld, and maxSeatsCanBeHeld
   seatProperties: {
     votingPower: number;
@@ -20,6 +21,10 @@ interface Seat extends mongoose.Document {
 
 const seatModel = new mongoose.Schema<Seat>({
   name: {
+    type: String,
+    required: true,
+  },
+  seatId: {
     type: String,
     required: true,
   },

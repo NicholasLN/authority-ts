@@ -9,6 +9,7 @@ interface Region extends mongoose.Document {
     type: string;
     coordinates: number[][][] | number[][][][];
   };
+  seatsElected: ObjectId[];
   returnAsGeoJSON: () => {
     type: string;
     properties?: any;
@@ -27,6 +28,12 @@ const regionSchema = new mongoose.Schema<Region>({
     // support for multi-polygons as well
     coordinates: { type: Array, required: true },
   },
+  seatsElected: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Seat",
+    },
+  ],
 });
 
 regionSchema.methods.returnAsGeoJSON = function () {

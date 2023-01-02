@@ -9,6 +9,9 @@ import LegislativeBody from "../../mongo/models/government/LegislativeBody";
 import LegislativeBranch from "../../mongo/models/government/LegislativeBranch";
 import Seat from "../../mongo/models/government/Seat";
 import Region from "../../mongo/models/Region";
+import { ObjectId } from "mongoose";
+import { logGame } from "../../utils/logging";
+import Character from "../../mongo/models/Character";
 
 type CountryFile = {
   name: string;
@@ -28,12 +31,7 @@ type CountryFile = {
     {
       name: string;
       type: string;
-      seatsElected: [
-        {
-          id: string;
-          proportional: number;
-        }
-      ];
+      seatsElected: [string];
       coordinates: number[][][];
     }
   ];
@@ -43,81 +41,122 @@ interface RegionFile {
   countries: CountryFile[];
 }
 
-router.get("/createWorld", isAdmin, async (req, res) => {
+async function reset() {
+  await Character.deleteMany({});
   await Country.deleteMany({});
   await LegislativeBody.deleteMany({});
   await LegislativeBranch.deleteMany({});
   await Seat.deleteMany({});
   await Region.deleteMany({});
-
+}
+async function getWorldFromFile(): Promise<RegionFile> {
   const worldPath = path.join(__dirname, "./world.json");
   const world = JSON.parse(fs.readFileSync(worldPath, "utf8")) as RegionFile;
-  world.countries.map(async (country: CountryFile) => {
-    // Create Legislative Bodies first
-    // Then create Legislative Branch
-    // Then create Country. Assign Legislative Branch to Country
-    // Assign Legislative Bodies to Legislative Branch
-    // Create Regions, assign to Country
-
-    // Create Legislative Bodies
-    var legislativeBodies = [] as any;
-    if (country.legislativeBranch.legislativeBodies) {
-      country.legislativeBranch.legislativeBodies.map((legislativeBody) => {
+  return world;
+}
+async function createCountry(
+  legislativeBranch: any,
+  country: any
+): Promise<any> {
+  var newCountry = new Country({
+    name: country.name,
+    color: country.color,
+    properties: country.properties,
+    legislativeBranch: legislativeBranch,
+  });
+  await newCountry.save();
+  return newCountry;
+}
+async function createLegislativeBranch(legislativeBranch: any): Promise<any> {
+  var seats = [] as any;
+  var legislativeBodies = [] as any;
+  if (legislativeBranch.legislativeBodies) {
+    await Promise.all(
+      legislativeBranch.legislativeBodies.map(async (legislativeBody: any) => {
         var newLegislativeBody = new LegislativeBody({
           name: legislativeBody.name,
         });
-        newLegislativeBody.save();
         legislativeBodies.push(newLegislativeBody);
-      });
-    }
-    // Create Legislative Branch
-    var legislativeBranch = new LegislativeBranch({
-      legislativeBodies: legislativeBodies,
+        // seats
+        await Promise.all(
+          legislativeBody.seats.map(async (seat: any) => {
+            var newSeat = new Seat({
+              name: seat.name,
+              seatId: seat.id,
+              seatProperties: {
+                votingPower: seat.votingPower || 1,
+                minSeatsCanBeHeld: seat.minSeatsCanBeHeld || 1,
+                maxSeatsCanBeHeld: seat.maxSeatsCanBeHeld || 1,
+              },
+              legislativeBody: newLegislativeBody,
+            });
+            await newSeat.save();
+            newLegislativeBody.seats.push(newSeat._id);
+            seats.push(newSeat);
+          })
+        );
+        await newLegislativeBody.save();
+      })
+    );
+  }
+  var legislativeBranch = new LegislativeBranch({
+    legislativeBodies: legislativeBodies,
+  }) as any;
+  await legislativeBranch.save();
+  return { seats, legislativeBranch };
+}
+async function createRegions(regions: any, seats: any) {
+  var regionsReturn = [] as any;
+  regions.map(async (region: any) => {
+    var seatsInRegion = seats.filter((seat: any) => {
+      return region.seatsElected.includes(seat.seatId);
     });
-    // Create Country
-    var newCountry = new Country({
-      name: country.name,
-      color: country.color,
-      legislativeBranch: legislativeBranch,
+    var seatsInRegionIds = seatsInRegion.map((seat: any) => {
+      return seat._id;
     });
-    // Create Regions
-    var regions = [] as any;
-    country.regions.map((region) => {
-      let newRegion = new Region({
-        name: region.name,
-        borders: {
-          type: region.type,
-          coordinates: region.coordinates,
-        },
-      });
-      regions.push(newRegion);
-      newCountry.regions.push(newRegion._id);
+    var newRegion = new Region({
+      name: region.name,
+      type: region.type,
+      seatsElected: seatsInRegionIds,
+      coordinates: region.coordinates,
     });
-    // Save Country
-    await newCountry.save();
-    // Save Legislative Branch
-    await legislativeBranch.save();
-    // Save Legislative Bodies
-    legislativeBodies.map(async (legislativeBody: any) => {
-      await legislativeBody.save();
-    });
-    // Save Regions
-    regions.map(async (region: any) => {
-      region.country = newCountry;
-      await region.save();
-    });
-
-    var countryFound = await Country.findOne({ name: country.name });
-    // populate the country with its regions, legislative branch, and legislative bodies
-    if (countryFound) {
-      countryFound = await countryFound.populate("regions");
-      countryFound = await countryFound.populate("legislativeBranch");
-      countryFound = await countryFound.populate(
-        "legislativeBranch.legislativeBodies"
-      );
-    }
+    regionsReturn.push(newRegion);
   });
-  res.status(200).json({ message: "World created" });
+  return regionsReturn;
+}
+
+router.get("/createWorld", isAdmin, async (req, res) => {
+  try {
+    logGame("Resetting/creating new world...");
+    await reset();
+    logGame("World deleted.");
+    var world = await getWorldFromFile();
+    const countryPromises = world.countries.map(
+      async (country: CountryFile) => {
+        logGame(`Creating country: ${country.name}...`);
+        var { seats, legislativeBranch } = await createLegislativeBranch(
+          country.legislativeBranch
+        );
+        var newCountry = await createCountry(legislativeBranch, country);
+        var regions = await createRegions(country.regions, seats);
+
+        for (const region of regions) {
+          newCountry.regions.push(region._id);
+          region.save();
+        }
+        logGame(`Country created: ${country.name}`);
+        return newCountry.save();
+      }
+    );
+    await Promise.all(countryPromises);
+    res.status(200).json({ message: "World created" });
+    logGame("World created.");
+    var countries = await Country.find({});
+    logGame(`Countries: ${countries.length}`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error creating world" });
+  }
 });
 
 export default router;

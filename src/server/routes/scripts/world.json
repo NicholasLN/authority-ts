@@ -26,12 +26,7 @@
         {
           "name": "Braskeria Major",
           "type": "Polygon",
-          "seatsElected": [
-            {
-              "id": "braskeriaRepresentative",
-              "proportional": true
-            }
-          ],
+          "seatsElected": ["braskeriaRepresentative"],
           "coordinates": [
             [
               [8.099279, 49.017784],
