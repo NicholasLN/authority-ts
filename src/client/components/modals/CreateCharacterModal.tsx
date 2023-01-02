@@ -10,7 +10,7 @@ import postPage from "../../utils/postPage";
 import Modal from "../struct/Modal";
 
 type CreateCharacterModalProps = {
-  onClose: () => void;
+  onClose: () => void | Promise<string>;
   shown: boolean;
 };
 
@@ -89,6 +89,7 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
           characters: resp.data.characters,
         })
       );
+      dispatch(switchCharacter(resp.data.character._id));
       props.onClose();
     }
   };
