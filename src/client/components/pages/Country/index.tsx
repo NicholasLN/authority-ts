@@ -30,40 +30,53 @@ export default function Country() {
 
   useEffect(() => {
     console.log("Country page loaded");
-    var searchId: string | null | undefined;
-    if (searchParams.get("id")) {
-      searchId = searchParams.get("id");
-    } else {
-      nav("/");
-    }
 
     async function getCountry() {
-      var resp = await getPage(`/api/country/read/${searchId}`);
-      if (resp.status === 200) {
-        var country = await resp.data;
-        if (country) {
-          if (mode === "map") {
-            var mapInfo = await getPage(`/api/country/getGeoJSON/${searchId}`);
-            if (mapInfo.status === 200) {
-              var mapData = await mapInfo.data;
-              if (mapData) {
-                setMapGeoJSON(mapData);
-              } else {
+      const searchId = searchParams.get("id");
+      if (!searchId) {
+        setNotFound(true);
+        setLoading(false);
+        return;
+      }
+      try {
+        const resp = await getPage(`/api/country/read/${searchId}`);
+        if (resp.status === 200) {
+          const country = await resp.data;
+          if (country) {
+            if (mode === "map") {
+              try {
+                const mapInfo = await getPage(
+                  `/api/country/getGeoJSON/${searchId}`
+                );
+                if (mapInfo.status === 200) {
+                  const mapData = await mapInfo.data;
+                  if (mapData) {
+                    setMapGeoJSON(mapData);
+                  } else {
+                    dispatch(quickErrorAlert("Failed to load map data."));
+                  }
+                } else {
+                  dispatch(quickErrorAlert("Failed to load map data."));
+                }
+              } catch (error) {
                 dispatch(quickErrorAlert("Failed to load map data."));
               }
-            } else {
-              dispatch(quickErrorAlert("Failed to load map data."));
             }
+            setCountryInformation(country);
+            setLoading(false);
           }
-          setCountryInformation(country);
+        } else {
+          setNotFound(true);
           setLoading(false);
         }
-      } else {
+      } catch (error) {
         setNotFound(true);
         setLoading(false);
       }
     }
+
     getCountry();
+
     return () => {
       setCountryInformation(null as unknown as Country);
       setMapGeoJSON(null as unknown as GeoJSON.FeatureCollection);

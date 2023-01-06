@@ -14,17 +14,21 @@ export default function Region() {
 
   useEffect(() => {
     async function getRegion() {
-      await getPage(`/api/region/read/${searchParams.get("id")}`).then(
-        (resp) => {
-          if (resp.status === 200) {
-            setRegionInformation(resp.data);
-            setLoading(false);
-          } else {
-            setNotFound(true);
-          }
+      try {
+        const resp = await getPage(
+          `/api/region/read/${searchParams.get("id")}`
+        );
+        if (resp.status === 200) {
+          setRegionInformation(resp.data);
+          setLoading(false);
+        } else {
+          setNotFound(true);
         }
-      );
+      } catch (error) {
+        setNotFound(true);
+      }
     }
+
     getRegion();
   }, [searchParams]);
 
