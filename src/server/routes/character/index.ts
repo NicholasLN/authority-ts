@@ -5,7 +5,7 @@ import {
   charBelongsToUser,
   isLoggedIn,
   notLoggedIn,
-} from "../../stategies/authStrategies";
+} from "../../strategies/authStrategies";
 
 var router = express.Router();
 

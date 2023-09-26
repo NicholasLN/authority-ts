@@ -1,4 +1,3 @@
-import { ObjectId } from "mongoose";
 import Country from "../../mongo/models/government/Country";
 import User from "../../mongo/models/User";
 
@@ -55,6 +54,7 @@ async function grabUserById(
         })
       );
     }
+    delete user.password;
     return user as any as typeof User;
   }
   return null as any as typeof User;
@@ -93,6 +93,7 @@ async function grabUser(
         })
       );
     }
+    delete user.password;
     return user as any as typeof User;
   }
   return null as any as typeof User;

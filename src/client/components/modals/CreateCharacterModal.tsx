@@ -89,7 +89,7 @@ export default function CreateCharacterModal(props: CreateCharacterModalProps) {
           characters: resp.data.characters,
         })
       );
-      dispatch(switchCharacter(resp.data.character._id));
+      //dispatch(switchCharacter(resp.data.character));
       props.onClose();
     }
   };

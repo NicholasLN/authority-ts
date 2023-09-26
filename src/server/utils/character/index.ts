@@ -1,4 +1,3 @@
-import { ObjectId } from "mongoose";
 import Character from "../../mongo/models/Character";
 import Country from "../../mongo/models/government/Country";
 import User from "../../mongo/models/User";
@@ -72,7 +71,7 @@ async function grabCharacters(
     },
   });
   if (charactersDatabase) {
-    var characters = charactersDatabase.map((character) =>
+    var characters = charactersDatabase.map((character: any) =>
       character.toObject()
     );
     if (includeCountry) {
@@ -144,7 +143,7 @@ async function grabCharacter(
     strictPopulate: false,
   });
   if (charactersDatabase) {
-    var characters = charactersDatabase.map((character) =>
+    var characters = charactersDatabase.map((character: any) =>
       character.toObject()
     );
     if (includeCountry) {

@@ -60,10 +60,12 @@ async function createCharacter(
 
         const newCharacters = await grabCharactersById(user._id);
         if (newCharacters) {
-          return res.status(200).json({
+          let ret = {
             characters: newCharacters,
-            character: newChar._id,
-          });
+            character: await newChar._id
+          }
+          console.log(ret);
+          return res.status(200).json(ret);
         } else {
           return res.status(500).json({
             errors: [{ msg: "Something went wrong" }],

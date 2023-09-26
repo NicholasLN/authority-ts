@@ -1,7 +1,8 @@
-import mongoose from "mongoose";
-
 import { logDB, logError } from "../utils/logging";
 import main from "./models";
+
+const mongoose = require('mongoose');
+mongoose.set('strictQuery', false);
 
 function grabModels() {
   main();
@@ -13,7 +14,7 @@ function grabModels() {
 function initMongoDBConn() {
   if (!process.env.MONGODB_URI_CONNECTION_STRING) {
     logError(
-      "MONGODB_URI_CONNECTION_STRING not set in environment variables. Unforunately, the server cannot start without this variable. Bye!"
+      "MONGODB_URI_CONNECTION_STRING not set in environment variables. Unfortunately, the server cannot start without this variable. Bye!"
     );
     process.exit(1);
   }
@@ -24,7 +25,7 @@ function initMongoDBConn() {
   mongoose.connect(
     `${process.env.MONGODB_URI_CONNECTION_STRING}/${process.env.MONGODB_DB_NAME}`,
     {},
-    (err) => {
+    (err: any) => {
       if (err) {
         logError(`Error connecting to MongoDB: ${err}`);
         logError("Failed to connect to MongoDB. Bye!");

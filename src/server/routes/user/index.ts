@@ -2,7 +2,7 @@ import express from "express";
 import { body } from "express-validator";
 
 import userController from "../../controllers/userController";
-import { isLoggedIn, notLoggedIn } from "../../stategies/authStrategies";
+import { isLoggedIn, notLoggedIn } from "../../strategies/authStrategies";
 
 var router = express.Router();
 

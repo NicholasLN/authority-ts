@@ -38,6 +38,7 @@ export const charSlice = createSlice({
       }
     },
     switchCharacter: (state, action) => {
+      console.log(action.payload);
       Cookies.set("current_character", action.payload._id);
       // Find the character in the list of characters and set it as the current character.
       var char = state.characters.find(
